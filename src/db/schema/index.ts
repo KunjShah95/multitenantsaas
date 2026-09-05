@@ -25,3 +25,4 @@ export * from "./upsellRules.js";
 export * from "./quotes.js";
 export * from "./quoteLines.js";
 export * from "./quoteVersions.js";
+export * from "./quoteApprovals.js";

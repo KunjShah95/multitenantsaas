@@ -12,6 +12,7 @@ import { authRouter, portalRouter, meRouter } from "./api/v1/auth.routes.js";
 import { configRouter } from "./api/v1/config.routes.js";
 import { governanceRouter } from "./api/v1/governance.routes.js";
 import { quotesRouter } from "./api/v1/quotes.routes.js";
+import { approvalsRouter } from "./api/v1/approvals.routes.js";
 
 export function createApp() {
   const env = getEnv();
@@ -66,6 +67,8 @@ export function createApp() {
 
   // v1 API — Phase 04 quotes (tenant-scoped, revision-protected)
   app.use("/api/v1", quotesRouter);
+  // v1 API — Phase 05 approvals (risk/submit/decisions/inbox/audit)
+  app.use("/api/v1", approvalsRouter);
 
   // 404 for unknown routes — single error envelope
   app.use(notFoundHandler);

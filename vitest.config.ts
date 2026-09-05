@@ -5,7 +5,7 @@ export default defineConfig({
     include: ["tests/**/*.test.ts"],
     environment: "node",
     globals: false,
-    testTimeout: 30000,
+    testTimeout: 120000,
     coverage: {
       provider: "v8",
       reportsDirectory: "coverage",

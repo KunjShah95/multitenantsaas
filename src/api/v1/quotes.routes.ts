@@ -44,11 +44,15 @@ function parseIfMatch(req: import("express").Request): number {
 }
 
 function getAvailableActions(status: string, role: string): string[] {
-  if (status === "draft") {
-    // admin and rep can edit; manager/finance read-only but still edit for demo?
-    if (["admin", "rep", "manager"].includes(role)) return ["edit", "add_line", "patch_line", "delete_line"];
+  if (status === "draft" || status === "returnedForRevision") {
+    if (["admin", "rep", "manager"].includes(role)) return ["edit", "add_line", "patch_line", "delete_line", "submit"];
     return ["edit"];
   }
+  if (status === "awaitingApproval") {
+    if (["manager", "finance", "admin"].includes(role)) return ["approve", "reject", "returnForRevision"];
+    return [];
+  }
+  if (status === "approvedInternal") return ["share", "convert"];
   return [];
 }
 
@@ -189,7 +193,7 @@ async function recomputeAndUpdateQuote(tx: any, tenantId: string, quoteId: strin
   const qRows = await tx.select().from(schema.quotes).where(and(eq(schema.quotes.id, quoteId), eq(schema.quotes.tenantId, tenantId))).limit(1);
   const quote = qRows[0];
   if (!quote) throw new ApiError(404, "NOT_FOUND", "Quote not found");
-  if (quote.status !== "draft") throw new ApiError(422, "UNPROCESSABLE", "Quote not editable in current status");
+  if (!["draft", "returnedForRevision"].includes(quote.status)) throw new ApiError(422, "UNPROCESSABLE", "Quote not editable in current status");
 
   // risk preview to store on quote (optional)
   const custRows = await tx.select().from(schema.customers).where(eq(schema.customers.id, quote.customerId)).limit(1);
@@ -599,7 +603,7 @@ quotesRouter.patch("/quotes/:id", async (req, res, next) => {
       const rows = await tx.select().from(schema.quotes).where(and(eq(schema.quotes.id, quoteId), eq(schema.quotes.tenantId, tenantId))).limit(1);
       const existing = rows[0];
       if (!existing) throw new ApiError(404, "NOT_FOUND", "Quote not found");
-      if (existing.status !== "draft") throw new ApiError(422, "UNPROCESSABLE", "Quote not editable in current status");
+      if (!["draft", "returnedForRevision"].includes(existing.status)) throw new ApiError(422, "UNPROCESSABLE", "Quote not editable in current status");
       if (existing.revision !== expectedRevision) throw new ApiError(409, "VERSION_CONFLICT", "The quote changed. Reload and try again.", { currentRevision: existing.revision });
 
       // authorization: owner/team or admin
@@ -689,7 +693,7 @@ quotesRouter.post("/quotes/:id/lines", async (req, res, next) => {
       const qRows = await tx.select().from(schema.quotes).where(and(eq(schema.quotes.id, quoteId), eq(schema.quotes.tenantId, tenantId))).limit(1);
       const quote = qRows[0];
       if (!quote) throw new ApiError(404, "NOT_FOUND", "Quote not found");
-      if (quote.status !== "draft") throw new ApiError(422, "UNPROCESSABLE", "Quote not editable");
+      if (!["draft", "returnedForRevision"].includes(quote.status)) throw new ApiError(422, "UNPROCESSABLE", "Quote not editable");
       if (quote.revision !== expectedRevision) throw new ApiError(409, "VERSION_CONFLICT", "The quote changed. Reload and try again.", { currentRevision: quote.revision });
 
       // auth check
@@ -831,7 +835,7 @@ quotesRouter.patch("/quotes/:id/lines/:lineId", async (req, res, next) => {
       const qRows = await tx.select().from(schema.quotes).where(and(eq(schema.quotes.id, quoteId), eq(schema.quotes.tenantId, tenantId))).limit(1);
       const quote = qRows[0];
       if (!quote) throw new ApiError(404, "NOT_FOUND", "Quote not found");
-      if (quote.status !== "draft") throw new ApiError(422, "UNPROCESSABLE", "Quote not editable");
+      if (!["draft", "returnedForRevision"].includes(quote.status)) throw new ApiError(422, "UNPROCESSABLE", "Quote not editable");
       if (quote.revision !== expectedRevision) throw new ApiError(409, "VERSION_CONFLICT", "The quote changed. Reload and try again.", { currentRevision: quote.revision });
 
       if (role !== "admin") {
@@ -962,7 +966,7 @@ quotesRouter.delete("/quotes/:id/lines/:lineId", async (req, res, next) => {
       const qRows = await tx.select().from(schema.quotes).where(and(eq(schema.quotes.id, quoteId), eq(schema.quotes.tenantId, tenantId))).limit(1);
       const quote = qRows[0];
       if (!quote) throw new ApiError(404, "NOT_FOUND", "Quote not found");
-      if (quote.status !== "draft") throw new ApiError(422, "UNPROCESSABLE", "Quote not editable");
+      if (!["draft", "returnedForRevision"].includes(quote.status)) throw new ApiError(422, "UNPROCESSABLE", "Quote not editable");
       if (quote.revision !== expectedRevision) throw new ApiError(409, "VERSION_CONFLICT", "The quote changed. Reload and try again.", { currentRevision: quote.revision });
 
       if (role !== "admin") {

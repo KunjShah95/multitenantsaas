@@ -1,0 +1,2 @@
+ALTER TABLE "quote_approvals" DROP CONSTRAINT "quote_approvals_role_check";--> statement-breakpoint
+ALTER TABLE "quote_approvals" ADD CONSTRAINT "quote_approvals_role_check" CHECK ("quote_approvals"."role" IN ('manager','finance','admin','ops','rep'));

@@ -50,6 +50,20 @@
       "when": 1788592245718,
       "tag": "0006_careful_stature",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788596220671,
+      "tag": "0007_old_kulan_gath",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788597399346,
+      "tag": "0008_rare_cannonball",
+      "breakpoints": true
     }
   ]
 }
