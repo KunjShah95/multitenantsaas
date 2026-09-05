@@ -8,26 +8,10 @@ import { writeAuditEvent } from "../../shared/audit.js";
 import { findIdempotency, storeIdempotency } from "../../shared/idempotency.js";
 import { paginationQuerySchema, encodeCursor, decodeCursor } from "../../shared/pagination.js";
 import * as schema from "../../db/schema/index.js";
-import rateLimit from "express-rate-limit";
+import { portalRateLimiter as portalLimiter } from "../../shared/rateLimiter.js";
 import { OrdersService } from "../../domain/orders/orders.service.js";
 
 export const portalQuotesRouter = Router();
-
-const portalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (_req, res) => {
-    res.status(429).json({
-      error: {
-        code: "RATE_LIMITED",
-        message: "Too many requests",
-        requestId: (res as unknown as { req: { requestId: string } }).req.requestId,
-      },
-    });
-  },
-});
 
 function portalSafeQuote(
   quote: typeof schema.quotes.$inferSelect,

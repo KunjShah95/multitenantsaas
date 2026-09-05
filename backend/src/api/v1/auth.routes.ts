@@ -1,5 +1,4 @@
 import { Router } from "express";
-import rateLimit from "express-rate-limit";
 import { ApiError } from "../../shared/errors.js";
 import { authenticate } from "../../middleware/authenticate.js";
 import { requireMembershipRole } from "../../middleware/authorize.js";
@@ -15,38 +14,7 @@ import {
 import * as service from "./auth.service.js";
 import { requestPortalLink, exchangePortalLink } from "../../auth/portal.js";
 import { getPortalCookieOptions } from "../../auth/session.js";
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (_req, res) => {
-    res.status(429).json({
-      error: {
-        code: "RATE_LIMITED",
-        message: "Too many requests",
-        requestId: (res as unknown as { req: { requestId: string } }).req.requestId,
-      },
-    });
-  },
-});
-
-const portalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (_req, res) => {
-    res.status(429).json({
-      error: {
-        code: "RATE_LIMITED",
-        message: "Too many requests",
-        requestId: (res as unknown as { req: { requestId: string } }).req.requestId,
-      },
-    });
-  },
-});
+import { authRateLimiter as authLimiter, portalRateLimiter as portalLimiter } from "../../shared/rateLimiter.js";
 
 export const authRouter = Router();
 

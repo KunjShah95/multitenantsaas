@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  # ── Gate 1: static checks (no DB needed) ─────────────────────────────────
+  static:
+    name: Typecheck · Lint · Unit tests · Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Build
+        run: npm run build
+
+      - name: Build OpenAPI spec
+        run: npm run build:openapi
+
+      - name: Contract tests (no DB)
+        run: npm run test:contract
+
+  # ── Gate 2: integration tests (requires Neon secrets) ────────────────────
+  integration:
+    name: Integration tests (Neon)
+    runs-on: ubuntu-latest
+    # Skip entirely if secrets are not available (e.g. forks without secrets)
+    if: >
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+      JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+      SESSION_PEPPER: ${{ secrets.SESSION_PEPPER }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Neon secrets presence
+        # Report a clear blocker rather than silently failing
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::error::DATABASE_URL secret is not set. Integration tests require a Neon DATABASE_URL. See docs/00-owner-setup.md."
+            exit 1
+          fi
+          if [ -z "$DATABASE_URL_UNPOOLED" ]; then
+            echo "::error::DATABASE_URL_UNPOOLED secret is not set. See docs/00-owner-setup.md."
+            exit 1
+          fi
+          if [ -z "$JWT_ACCESS_SECRET" ]; then
+            echo "::error::JWT_ACCESS_SECRET secret is not set. See docs/00-owner-setup.md."
+            exit 1
+          fi
+          if [ -z "$SESSION_PEPPER" ]; then
+            echo "::error::SESSION_PEPPER secret is not set. See docs/00-owner-setup.md."
+            exit 1
+          fi
+          echo "All required secrets present."
+
+      - name: Integration tests
+        run: npm run test:integration

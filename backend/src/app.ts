@@ -20,6 +20,7 @@ import { billingRouter } from "./api/v1/billing.routes.js";
 import { healthRouter } from "./api/v1/health.routes.js";
 import { reportsRouter } from "./api/v1/reports.routes.js";
 import { eventsRouter } from "./api/v1/events.routes.js";
+import { openapiRouter } from "./openapi/endpoint.js";
 
 export function createApp() {
   const env = getEnv();
@@ -88,6 +89,9 @@ export function createApp() {
   app.use("/api/v1", healthRouter);
   app.use("/api/v1", reportsRouter);
   app.use("/api/v1", eventsRouter);
+
+  // Phase 10 — OpenAPI spec and Swagger UI (unauthenticated, read-only)
+  app.use("/api/v1", openapiRouter);
 
   // 404 for unknown routes — single error envelope
   app.use(notFoundHandler);

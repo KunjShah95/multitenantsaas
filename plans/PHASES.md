@@ -17,7 +17,7 @@ agents do not need to infer it.
 | [07](phase-07-orders-and-inventory.md) | Planned | Order conversion, stock ledger/reservation, allocations and shipment | `Start Phase 07 from plans/phase-07-orders-and-inventory.md` |
 | [08](phase-08-subscriptions-and-billing.md) | Complete | Subscription changes, proration, invoices, payment boundary/jobs | `Start Phase 08 from plans/phase-08-subscriptions-and-billing.md` |
 | [09](phase-09-health-reports-and-events.md) | Complete | Health alerts, reports/exports, notification worker, SSE | `Start Phase 09 from plans/phase-09-health-reports-and-events.md` |
-| [10](phase-10-release-hardening.md) | Planned | Security/performance/operations/release readiness | `Start Phase 10 from plans/phase-10-release-hardening.md` |
+| [10](phase-10-release-hardening.md) | Complete | Security/performance/operations/release readiness | `Start Phase 10 from plans/phase-10-release-hardening.md` |
 
 Before starting any phase, apply the protocol in [README.md](README.md). The
 frontend should use [../docs/FRONTEND_API.md](../docs/FRONTEND_API.md), not the
