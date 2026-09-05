@@ -59,7 +59,12 @@ export class OrdersService {
       const lines = await tx
         .select()
         .from(schema.orderLines)
-        .where(and(eq(schema.orderLines.tenantId, tenantId), eq(schema.orderLines.orderId, existingOrder.id)));
+        .where(
+          and(
+            eq(schema.orderLines.tenantId, tenantId),
+            eq(schema.orderLines.orderId, existingOrder.id),
+          ),
+        );
 
       await BillingService.initializeBillingForOrder(tx, {
         tenantId,
@@ -229,7 +234,6 @@ export class OrdersService {
     });
 
     return { order, lines: insertedLines, isExisting: false };
-
   }
 
   /**
@@ -278,7 +282,12 @@ export class OrdersService {
     const plans = await tx
       .select()
       .from(schema.fulfillmentPlans)
-      .where(and(eq(schema.fulfillmentPlans.tenantId, tenantId), eq(schema.fulfillmentPlans.orderId, orderId)))
+      .where(
+        and(
+          eq(schema.fulfillmentPlans.tenantId, tenantId),
+          eq(schema.fulfillmentPlans.orderId, orderId),
+        ),
+      )
       .orderBy(desc(schema.fulfillmentPlans.createdAt));
 
     const latestPlan = plans[0] ?? null;
@@ -359,9 +368,7 @@ export class OrdersService {
       return safeLine;
     });
 
-    const {
-      ...safeOrder
-    } = fullOrder;
+    const { ...safeOrder } = fullOrder;
 
     return {
       ...safeOrder,

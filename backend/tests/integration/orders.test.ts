@@ -26,7 +26,9 @@ describe("Phase 7 Orders & Inventory Fulfillment", () => {
     globexAdmin = await login("carol@globex.test", "DemoPass123!", "globex");
 
     // Fetch customer
-    const custRes = await request(app).get("/api/v1/customers").set("Authorization", `Bearer ${acmeAdmin}`);
+    const custRes = await request(app)
+      .get("/api/v1/customers")
+      .set("Authorization", `Bearer ${acmeAdmin}`);
     customerId = custRes.body.data[0].id;
 
     // Create unique product for test
@@ -45,7 +47,9 @@ describe("Phase 7 Orders & Inventory Fulfillment", () => {
     prodId = prodRes.body.data.id;
 
     // Fetch or create warehouses
-    const whRes = await request(app).get("/api/v1/warehouses").set("Authorization", `Bearer ${acmeAdmin}`);
+    const whRes = await request(app)
+      .get("/api/v1/warehouses")
+      .set("Authorization", `Bearer ${acmeAdmin}`);
     if (whRes.body.data && whRes.body.data.length >= 2) {
       warehouse1Id = whRes.body.data[0].id;
       warehouse2Id = whRes.body.data[1].id;

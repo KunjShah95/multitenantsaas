@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { products } from "./products.js";

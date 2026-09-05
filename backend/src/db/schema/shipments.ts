@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { orders } from "./orders.js";
@@ -38,7 +48,10 @@ export const shipments = pgTable(
     index("shipments_order_idx").on(t.orderId),
     index("shipments_warehouse_idx").on(t.warehouseId),
     check("shipments_number_check", sql`char_length(${t.number}) > 0`),
-    check("shipments_status_check", sql`${t.status} IN ('created','packing','shipped','delivered','cancelled')`),
+    check(
+      "shipments_status_check",
+      sql`${t.status} IN ('created','packing','shipped','delivered','cancelled')`,
+    ),
   ],
 );
 
@@ -55,7 +68,9 @@ export const shipmentLines = pgTable(
     orderLineId: uuid("order_line_id")
       .notNull()
       .references(() => orderLines.id, { onDelete: "cascade" }),
-    reservationId: uuid("reservation_id").references(() => inventoryReservations.id, { onDelete: "set null" }),
+    reservationId: uuid("reservation_id").references(() => inventoryReservations.id, {
+      onDelete: "set null",
+    }),
     sku: text("sku").notNull(),
     quantity: numeric("quantity", { precision: 20, scale: 6 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

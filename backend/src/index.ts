@@ -11,6 +11,6 @@ const port = env.PORT;
 app.listen(port, () => {
   logger.info({ port, env: env.NODE_ENV }, `DealFlow360 foundation on :${port}`);
   // Keep console for environments without pino-pretty
-  // eslint-disable-next-line no-console
+   
   console.log(`DealFlow360 foundation on :${port} (NODE_ENV=${env.NODE_ENV})`);
 });

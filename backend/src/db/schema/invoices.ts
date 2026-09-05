@@ -25,7 +25,9 @@ export const invoices = pgTable(
       .references(() => organizations.id, { onDelete: "cascade" }),
     number: varchar("number", { length: 32 }).notNull(),
     orderId: uuid("order_id").references(() => orders.id, { onDelete: "restrict" }),
-    subscriptionId: uuid("subscription_id").references(() => subscriptions.id, { onDelete: "set null" }),
+    subscriptionId: uuid("subscription_id").references(() => subscriptions.id, {
+      onDelete: "set null",
+    }),
     customerId: uuid("customer_id")
       .notNull()
       .references(() => customers.id, { onDelete: "restrict" }),
@@ -53,10 +55,7 @@ export const invoices = pgTable(
     index("invoices_order_idx").on(t.orderId),
     check("invoices_number_check", sql`char_length(${t.number}) > 0`),
     check("invoices_currency_check", sql`char_length(${t.currency}) = 3`),
-    check(
-      "invoices_type_check",
-      sql`${t.invoiceType} IN ('one_time','recurring','adjustment')`,
-    ),
+    check("invoices_type_check", sql`${t.invoiceType} IN ('one_time','recurring','adjustment')`),
     check(
       "invoices_status_check",
       sql`${t.status} IN ('draft','issued','partial','paid','void','overdue')`,

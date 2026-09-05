@@ -178,7 +178,11 @@ export class FulfillmentService {
       for (const m of manualAllocations) {
         const line = lineMap.get(m.orderLineId);
         if (!line) {
-          throw new ApiError(422, "UNPROCESSABLE", `Order line ${m.orderLineId} does not belong to order`);
+          throw new ApiError(
+            422,
+            "UNPROCESSABLE",
+            `Order line ${m.orderLineId} does not belong to order`,
+          );
         }
         const qty = Number(m.quantity);
         if (qty <= 0) {
@@ -459,7 +463,16 @@ export class FulfillmentService {
     orderId: string,
     input: CreateShipmentInput,
   ) {
-    const { warehouseId, reservationIds, items, carrier, trackingNumber, notes, actorId, requestId } = input;
+    const {
+      warehouseId,
+      reservationIds,
+      items,
+      carrier,
+      trackingNumber,
+      notes,
+      actorId,
+      requestId,
+    } = input;
 
     // 1. Lock the order
     const [order] = await tx
@@ -473,7 +486,11 @@ export class FulfillmentService {
     }
 
     if (["shipped", "delivered", "cancelled"].includes(order.status)) {
-      throw new ApiError(422, "UNPROCESSABLE", `Order in status '${order.status}' cannot accept shipments`);
+      throw new ApiError(
+        422,
+        "UNPROCESSABLE",
+        `Order in status '${order.status}' cannot accept shipments`,
+      );
     }
 
     // 2. Find reservations to ship
@@ -495,7 +512,11 @@ export class FulfillmentService {
       .for("update");
 
     if (availableReservations.length === 0) {
-      throw new ApiError(422, "UNPROCESSABLE", "No active reservations found for the given warehouse to ship");
+      throw new ApiError(
+        422,
+        "UNPROCESSABLE",
+        "No active reservations found for the given warehouse to ship",
+      );
     }
 
     // Build map of ship quantity per reservation

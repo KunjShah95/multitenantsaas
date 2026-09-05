@@ -1,4 +1,13 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, index, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  index,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { orders } from "./orders.js";
@@ -22,7 +31,9 @@ export const orderLines = pgTable(
       .notNull()
       .references(() => products.id, { onDelete: "restrict" }),
     variantId: uuid("variant_id").references(() => productVariants.id, { onDelete: "set null" }),
-    subscriptionPlanId: uuid("subscription_plan_id").references(() => subscriptionPlans.id, { onDelete: "set null" }),
+    subscriptionPlanId: uuid("subscription_plan_id").references(() => subscriptionPlans.id, {
+      onDelete: "set null",
+    }),
     quantity: numeric("quantity", { precision: 20, scale: 6 }).notNull(),
     discountPct: numeric("discount_pct", { precision: 5, scale: 2 }).notNull().default("0"),
     billingType: varchar("billing_type", { length: 32 }).notNull().default("one_time"),
@@ -34,8 +45,12 @@ export const orderLines = pgTable(
     snapshotCategoryCode: varchar("snapshot_category_code", { length: 64 }),
     snapshotUnit: varchar("snapshot_unit", { length: 32 }).notNull(),
     snapshotUnitPrice: numeric("snapshot_unit_price", { precision: 20, scale: 6 }).notNull(),
-    snapshotUnitCost: numeric("snapshot_unit_cost", { precision: 20, scale: 6 }).notNull().default("0"),
-    snapshotTaxRatePct: numeric("snapshot_tax_rate_pct", { precision: 5, scale: 2 }).notNull().default("0"),
+    snapshotUnitCost: numeric("snapshot_unit_cost", { precision: 20, scale: 6 })
+      .notNull()
+      .default("0"),
+    snapshotTaxRatePct: numeric("snapshot_tax_rate_pct", { precision: 5, scale: 2 })
+      .notNull()
+      .default("0"),
     snapshotCurrency: varchar("snapshot_currency", { length: 3 }).notNull(),
     lineSubtotal: numeric("line_subtotal", { precision: 20, scale: 6 }).notNull().default("0"),
     lineDiscount: numeric("line_discount", { precision: 20, scale: 6 }).notNull().default("0"),
@@ -53,7 +68,10 @@ export const orderLines = pgTable(
     index("order_lines_product_idx").on(t.productId),
     check("order_lines_quantity_check", sql`${t.quantity} > 0`),
     check("order_lines_discount_check", sql`${t.discountPct} >= 0 AND ${t.discountPct} <= 100`),
-    check("order_lines_tax_check", sql`${t.snapshotTaxRatePct} >= 0 AND ${t.snapshotTaxRatePct} <= 100`),
+    check(
+      "order_lines_tax_check",
+      sql`${t.snapshotTaxRatePct} >= 0 AND ${t.snapshotTaxRatePct} <= 100`,
+    ),
     check("order_lines_billing_check", sql`${t.billingType} IN ('one_time','recurring')`),
   ],
 );

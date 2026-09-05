@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, varchar, integer, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  integer,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { customerTiers } from "./customerTiers.js";
@@ -12,7 +22,9 @@ export const priceLists = pgTable(
       .references(() => organizations.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     currency: varchar("currency", { length: 3 }).notNull(),
-    customerTierId: uuid("customer_tier_id").references(() => customerTiers.id, { onDelete: "set null" }),
+    customerTierId: uuid("customer_tier_id").references(() => customerTiers.id, {
+      onDelete: "set null",
+    }),
     priority: integer("priority").notNull().default(0),
     effectiveFrom: timestamp("effective_from", { withTimezone: true }),
     effectiveTo: timestamp("effective_to", { withTimezone: true }),
@@ -27,6 +39,9 @@ export const priceLists = pgTable(
     check("price_lists_name_check", sql`char_length(${t.name}) > 0`),
     check("price_lists_currency_check", sql`char_length(${t.currency}) = 3`),
     check("price_lists_status_check", sql`${t.status} IN ('active','archived')`),
-    check("price_lists_effective_check", sql`${t.effectiveTo} IS NULL OR ${t.effectiveFrom} IS NULL OR ${t.effectiveTo} > ${t.effectiveFrom}`),
+    check(
+      "price_lists_effective_check",
+      sql`${t.effectiveTo} IS NULL OR ${t.effectiveFrom} IS NULL OR ${t.effectiveTo} > ${t.effectiveFrom}`,
+    ),
   ],
 );

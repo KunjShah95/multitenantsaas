@@ -1,12 +1,4 @@
-import {
-  pgTable,
-  uuid,
-  text,
-  timestamp,
-  jsonb,
-  index,
-  uniqueIndex,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, jsonb, index, uniqueIndex } from "drizzle-orm/pg-core";
 import { organizations } from "./organizations.js";
 
 export const idempotencyKeys = pgTable(

@@ -8,7 +8,11 @@ import { ApiError } from "../shared/errors.js";
 export async function requestPortalLink(email: string): Promise<void> {
   const db = getDb();
   // Find contact by email (any tenant — but we need tenant to store link)
-  const contacts = await db.select().from(customerContacts).where(eq(customerContacts.email, email)).limit(10);
+  const contacts = await db
+    .select()
+    .from(customerContacts)
+    .where(eq(customerContacts.email, email))
+    .limit(10);
   // Neutral response: always 202 even if not found. Only create link if found.
   if (contacts.length === 0) return;
 
@@ -36,17 +40,26 @@ export async function requestPortalLink(email: string): Promise<void> {
   }
 }
 
-export async function exchangePortalLink(rawToken: string): Promise<{ tenantId: string; contactId: string; portalToken: string }> {
+export async function exchangePortalLink(
+  rawToken: string,
+): Promise<{ tenantId: string; contactId: string; portalToken: string }> {
   const tokenHash = hashToken(rawToken);
   const db = getDb();
-  const rows = await db.select().from(portalMagicLinks).where(eq(portalMagicLinks.tokenHash, tokenHash)).limit(1);
+  const rows = await db
+    .select()
+    .from(portalMagicLinks)
+    .where(eq(portalMagicLinks.tokenHash, tokenHash))
+    .limit(1);
   const link = rows[0];
   if (!link) throw new ApiError(401, "UNAUTHORIZED", "Invalid or expired link");
   if (link.usedAt) throw new ApiError(401, "UNAUTHORIZED", "Link already used");
   if (link.expiresAt < new Date()) throw new ApiError(401, "UNAUTHORIZED", "Link expired");
 
   // Mark used
-  await db.update(portalMagicLinks).set({ usedAt: new Date() }).where(eq(portalMagicLinks.id, link.id));
+  await db
+    .update(portalMagicLinks)
+    .set({ usedAt: new Date() })
+    .where(eq(portalMagicLinks.id, link.id));
 
   // Create portal session
   const portalRaw = generateOpaqueToken(32);
@@ -65,17 +78,27 @@ export async function exchangePortalLink(rawToken: string): Promise<{ tenantId: 
   return { tenantId: link.tenantId, contactId: link.contactId, portalToken: portalRaw };
 }
 
-export async function verifyPortalToken(raw: string): Promise<{ contactId: string; tenantId: string; sessionId: string }> {
+export async function verifyPortalToken(
+  raw: string,
+): Promise<{ contactId: string; tenantId: string; sessionId: string }> {
   const hash = hashToken(raw);
   const db = getDb();
-  const rows = await db.select().from(portalSessions).where(eq(portalSessions.tokenHash, hash)).limit(1);
+  const rows = await db
+    .select()
+    .from(portalSessions)
+    .where(eq(portalSessions.tokenHash, hash))
+    .limit(1);
   const sess = rows[0];
-  if (!sess || sess.revokedAt || sess.expiresAt < new Date()) throw new ApiError(401, "UNAUTHORIZED", "Portal session expired");
+  if (!sess || sess.revokedAt || sess.expiresAt < new Date())
+    throw new ApiError(401, "UNAUTHORIZED", "Portal session expired");
   return { contactId: sess.contactId, tenantId: sess.tenantId, sessionId: sess.id };
 }
 
 export async function revokePortalSession(raw: string): Promise<void> {
   const hash = hashToken(raw);
   const db = getDb();
-  await db.update(portalSessions).set({ revokedAt: new Date() }).where(eq(portalSessions.tokenHash, hash));
+  await db
+    .update(portalSessions)
+    .set({ revokedAt: new Date() })
+    .where(eq(portalSessions.tokenHash, hash));
 }

@@ -32,7 +32,9 @@ function termsFromSubscription(sub: typeof schema.subscriptions.$inferSelect): S
   };
 }
 
-function snapshotTerms(terms: SubscriptionTerms & { billingInterval?: string; planCode?: string | null }) {
+function snapshotTerms(
+  terms: SubscriptionTerms & { billingInterval?: string; planCode?: string | null },
+) {
   return JSON.stringify(terms);
 }
 
@@ -143,7 +145,12 @@ export class BillingService {
           const [dup] = await tx
             .select({ id: schema.invoices.id })
             .from(schema.invoices)
-            .where(and(eq(schema.invoices.tenantId, tenantId), eq(schema.invoices.number, invoiceNumber)))
+            .where(
+              and(
+                eq(schema.invoices.tenantId, tenantId),
+                eq(schema.invoices.number, invoiceNumber),
+              ),
+            )
             .limit(1);
           if (!dup) break;
           invoiceNumber = generateInvoiceNumber();
@@ -168,7 +175,8 @@ export class BillingService {
           })
           .returning();
 
-        if (!inserted) throw new ApiError(500, "INTERNAL_ERROR", "Failed to create one-time invoice");
+        if (!inserted)
+          throw new ApiError(500, "INTERNAL_ERROR", "Failed to create one-time invoice");
 
         oneTimeInvoice = inserted;
         const lineRows = oneTimeLines.map((l, idx) => {
@@ -199,7 +207,12 @@ export class BillingService {
           action: "invoice.created",
           entityType: "invoice",
           entityId: inserted.id,
-          detail: { invoiceNumber: inserted.number, orderId, status: "draft", invoiceType: "one_time" },
+          detail: {
+            invoiceNumber: inserted.number,
+            orderId,
+            status: "draft",
+            invoiceType: "one_time",
+          },
           requestId,
         });
 
@@ -216,7 +229,12 @@ export class BillingService {
       const [existingSub] = await tx
         .select()
         .from(schema.subscriptions)
-        .where(and(eq(schema.subscriptions.tenantId, tenantId), eq(schema.subscriptions.orderLineId, line.id)))
+        .where(
+          and(
+            eq(schema.subscriptions.tenantId, tenantId),
+            eq(schema.subscriptions.orderLineId, line.id),
+          ),
+        )
         .limit(1);
 
       if (existingSub) {
@@ -239,7 +257,8 @@ export class BillingService {
         )
         .limit(1);
 
-      if (!plan) throw new ApiError(422, "UNPROCESSABLE", "Subscription plan not found for recurring line");
+      if (!plan)
+        throw new ApiError(422, "UNPROCESSABLE", "Subscription plan not found for recurring line");
 
       const anchorDate = formatDateOnly(now);
       const interval = plan.billingInterval as BillingInterval;
@@ -375,7 +394,10 @@ export class BillingService {
       .update(schema.invoiceLines)
       .set({ immutable: 1 })
       .where(
-        and(eq(schema.invoiceLines.tenantId, tenantId), eq(schema.invoiceLines.invoiceId, invoice.id)),
+        and(
+          eq(schema.invoiceLines.tenantId, tenantId),
+          eq(schema.invoiceLines.invoiceId, invoice.id),
+        ),
       );
 
     await writeAuditEvent(tx, {
@@ -422,7 +444,12 @@ export class BillingService {
     const [sub] = await tx
       .select()
       .from(schema.subscriptions)
-      .where(and(eq(schema.subscriptions.tenantId, tenantId), eq(schema.subscriptions.id, subscriptionId)))
+      .where(
+        and(
+          eq(schema.subscriptions.tenantId, tenantId),
+          eq(schema.subscriptions.id, subscriptionId),
+        ),
+      )
       .limit(1);
 
     if (!sub) throw new ApiError(404, "NOT_FOUND", "Subscription not found");
@@ -505,7 +532,12 @@ export class BillingService {
     const [sub] = await tx
       .select()
       .from(schema.subscriptions)
-      .where(and(eq(schema.subscriptions.tenantId, tenantId), eq(schema.subscriptions.id, subscriptionId)))
+      .where(
+        and(
+          eq(schema.subscriptions.tenantId, tenantId),
+          eq(schema.subscriptions.id, subscriptionId),
+        ),
+      )
       .for("update");
 
     if (!sub) throw new ApiError(404, "NOT_FOUND", "Subscription not found");
@@ -545,7 +577,12 @@ export class BillingService {
         revision: sub.revision + 1,
         updatedAt: new Date(),
       })
-      .where(and(eq(schema.subscriptions.tenantId, tenantId), eq(schema.subscriptions.id, subscriptionId)))
+      .where(
+        and(
+          eq(schema.subscriptions.tenantId, tenantId),
+          eq(schema.subscriptions.id, subscriptionId),
+        ),
+      )
       .returning();
 
     const [change] = await tx
@@ -555,7 +592,10 @@ export class BillingService {
         subscriptionId: sub.id,
         changeType: input.quantity ? "quantity" : input.discountPct ? "discount" : "plan",
         effectiveAt,
-        previousSnapshot: snapshotTerms({ ...preview.previousTerms, billingInterval: sub.billingInterval }),
+        previousSnapshot: snapshotTerms({
+          ...preview.previousTerms,
+          billingInterval: sub.billingInterval,
+        }),
         newSnapshot: snapshotTerms({ ...preview.newTerms, billingInterval: sub.billingInterval }),
         prorationNet: preview.proration.netDelta,
         prorationTax: preview.proration.taxDelta,
@@ -586,10 +626,7 @@ export class BillingService {
     return { subscription: updated, change, adjustmentId, preview };
   }
 
-  static previewCancellation(
-    sub: typeof schema.subscriptions.$inferSelect,
-    effectiveAt: Date,
-  ) {
+  static previewCancellation(sub: typeof schema.subscriptions.$inferSelect, effectiveAt: Date) {
     if (sub.status !== "active") {
       throw new ApiError(422, "UNPROCESSABLE", "Subscription is not active");
     }
@@ -602,7 +639,12 @@ export class BillingService {
       effectiveAt,
     );
 
-    return { subscriptionId: sub.id, effectiveAt: effectiveAt.toISOString(), credit, cancelPolicy: sub.cancelPolicy };
+    return {
+      subscriptionId: sub.id,
+      effectiveAt: effectiveAt.toISOString(),
+      credit,
+      cancelPolicy: sub.cancelPolicy,
+    };
   }
 
   static async cancelSubscription(
@@ -617,12 +659,18 @@ export class BillingService {
       requestId?: string | null;
     },
   ) {
-    const { tenantId, subscriptionId, effectiveAt, reason, ifMatchRevision, actorId, requestId } = input;
+    const { tenantId, subscriptionId, effectiveAt, reason, ifMatchRevision, actorId, requestId } =
+      input;
 
     const [sub] = await tx
       .select()
       .from(schema.subscriptions)
-      .where(and(eq(schema.subscriptions.tenantId, tenantId), eq(schema.subscriptions.id, subscriptionId)))
+      .where(
+        and(
+          eq(schema.subscriptions.tenantId, tenantId),
+          eq(schema.subscriptions.id, subscriptionId),
+        ),
+      )
       .for("update");
 
     if (!sub) throw new ApiError(404, "NOT_FOUND", "Subscription not found");
@@ -662,7 +710,12 @@ export class BillingService {
         revision: sub.revision + 1,
         updatedAt: now,
       })
-      .where(and(eq(schema.subscriptions.tenantId, tenantId), eq(schema.subscriptions.id, subscriptionId)))
+      .where(
+        and(
+          eq(schema.subscriptions.tenantId, tenantId),
+          eq(schema.subscriptions.id, subscriptionId),
+        ),
+      )
       .returning();
 
     await tx.insert(schema.subscriptionChanges).values({
@@ -670,7 +723,10 @@ export class BillingService {
       subscriptionId: sub.id,
       changeType: "cancel",
       effectiveAt,
-      previousSnapshot: snapshotTerms({ ...termsFromSubscription(sub), billingInterval: sub.billingInterval }),
+      previousSnapshot: snapshotTerms({
+        ...termsFromSubscription(sub),
+        billingInterval: sub.billingInterval,
+      }),
       newSnapshot: JSON.stringify({ status: "cancelled" }),
       prorationNet: preview.credit.creditNet,
       prorationTax: preview.credit.creditTax,
@@ -742,13 +798,20 @@ export class BillingService {
     const lines = await tx
       .select()
       .from(schema.invoiceLines)
-      .where(and(eq(schema.invoiceLines.tenantId, tenantId), eq(schema.invoiceLines.invoiceId, invoiceId)))
+      .where(
+        and(
+          eq(schema.invoiceLines.tenantId, tenantId),
+          eq(schema.invoiceLines.invoiceId, invoiceId),
+        ),
+      )
       .orderBy(schema.invoiceLines.lineNumber);
 
     const adjustments = await tx
       .select()
       .from(schema.adjustments)
-      .where(and(eq(schema.adjustments.tenantId, tenantId), eq(schema.adjustments.invoiceId, invoiceId)));
+      .where(
+        and(eq(schema.adjustments.tenantId, tenantId), eq(schema.adjustments.invoiceId, invoiceId)),
+      );
 
     const payments = await tx
       .select()

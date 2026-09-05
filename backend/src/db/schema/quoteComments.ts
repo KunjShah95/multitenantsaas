@@ -1,4 +1,13 @@
-import { pgTable, uuid, text, timestamp, varchar, integer, index, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  integer,
+  index,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { quotes } from "./quotes.js";
@@ -18,7 +27,9 @@ export const quoteComments = pgTable(
       .references(() => quotes.id, { onDelete: "cascade" }),
     lineId: uuid("line_id").references(() => quoteLines.id, { onDelete: "set null" }),
     versionNumber: integer("version_number"),
-    authorContactId: uuid("author_contact_id").references(() => customerContacts.id, { onDelete: "set null" }),
+    authorContactId: uuid("author_contact_id").references(() => customerContacts.id, {
+      onDelete: "set null",
+    }),
     authorUserId: uuid("author_user_id").references(() => users.id, { onDelete: "set null" }),
     body: text("body").notNull(),
     visibility: varchar("visibility", { length: 32 }).notNull().default("portal_visible"),

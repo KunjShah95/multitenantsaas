@@ -1,4 +1,14 @@
-import { pgTable, uuid, timestamp, varchar, numeric, integer, index, check, jsonb } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  timestamp,
+  varchar,
+  numeric,
+  integer,
+  index,
+  check,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { orders } from "./orders.js";
@@ -28,7 +38,10 @@ export const fulfillmentPlans = pgTable(
     index("fulfillment_plans_tenant_idx").on(t.tenantId),
     index("fulfillment_plans_order_idx").on(t.orderId),
     index("fulfillment_plans_tenant_order_idx").on(t.tenantId, t.orderId),
-    check("fulfillment_plans_status_check", sql`${t.status} IN ('draft','planned','reserved','partiallyReserved','backordered','superseded','cancelled')`),
+    check(
+      "fulfillment_plans_status_check",
+      sql`${t.status} IN ('draft','planned','reserved','partiallyReserved','backordered','superseded','cancelled')`,
+    ),
     check("fulfillment_plans_revision_check", sql`${t.revision} >= 1`),
   ],
 );

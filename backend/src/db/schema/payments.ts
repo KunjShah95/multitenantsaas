@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { invoices } from "./invoices.js";
@@ -26,10 +36,7 @@ export const payments = pgTable(
   (t) => [
     index("payments_tenant_idx").on(t.tenantId),
     index("payments_invoice_idx").on(t.invoiceId),
-    uniqueIndex("payments_tenant_provider_external_unique").on(
-      t.tenantId,
-      t.providerExternalId,
-    ),
+    uniqueIndex("payments_tenant_provider_external_unique").on(t.tenantId, t.providerExternalId),
     check("payments_amount_check", sql`${t.amount} > 0`),
     check("payments_currency_check", sql`char_length(${t.currency}) = 3`),
     check("payments_method_check", sql`${t.method} IN ('manual','provider')`),

@@ -105,7 +105,8 @@ export function optimizeFulfillment(
       sku: i.sku,
       requestedQty: i.requestedQty.toString(),
       backorderedQty: i.requestedQty.toString(),
-      reason: activeWarehouses.length === 0 ? "No active warehouses available" : "No items to allocate",
+      reason:
+        activeWarehouses.length === 0 ? "No active warehouses available" : "No items to allocate",
     }));
 
     return {
@@ -309,7 +310,10 @@ export function optimizeFulfillment(
           requestedQty: item.requestedQty.toString(),
           allocatedQty: step.allocated.toString(),
           backorderedQty: "0",
-          reason: steps.length > 1 ? "Split allocation across warehouses" : "Optimal warehouse allocation",
+          reason:
+            steps.length > 1
+              ? "Split allocation across warehouses"
+              : "Optimal warehouse allocation",
         });
       }
       if (boQty > 0) {

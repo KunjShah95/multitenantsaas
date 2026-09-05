@@ -43,7 +43,9 @@ export const quoteLines = pgTable(
     snapshotCategoryCode: varchar("snapshot_category_code", { length: 64 }),
     snapshotUnit: varchar("snapshot_unit", { length: 32 }).notNull(),
     snapshotUnitPrice: numeric("snapshot_unit_price", { precision: 20, scale: 6 }).notNull(),
-    snapshotUnitCost: numeric("snapshot_unit_cost", { precision: 20, scale: 6 }).notNull().default("0"),
+    snapshotUnitCost: numeric("snapshot_unit_cost", { precision: 20, scale: 6 })
+      .notNull()
+      .default("0"),
     snapshotTaxRatePct: numeric("snapshot_tax_rate_pct", { precision: 5, scale: 2 })
       .notNull()
       .default("0"),
@@ -65,13 +67,13 @@ export const quoteLines = pgTable(
     index("quote_lines_product_idx").on(t.productId),
     check("quote_lines_quantity_check", sql`${t.quantity} > 0`),
     check("quote_lines_discount_check", sql`${t.discountPct} >= 0 AND ${t.discountPct} <= 100`),
-    check("quote_lines_tax_check", sql`${t.snapshotTaxRatePct} >= 0 AND ${t.snapshotTaxRatePct} <= 100`),
+    check(
+      "quote_lines_tax_check",
+      sql`${t.snapshotTaxRatePct} >= 0 AND ${t.snapshotTaxRatePct} <= 100`,
+    ),
     check("quote_lines_unitprice_check", sql`${t.snapshotUnitPrice} >= 0`),
     check("quote_lines_unitcost_check", sql`${t.snapshotUnitCost} >= 0`),
-    check(
-      "quote_lines_billing_check",
-      sql`${t.billingType} IN ('one_time','recurring')`,
-    ),
+    check("quote_lines_billing_check", sql`${t.billingType} IN ('one_time','recurring')`),
     check("quote_lines_line_subtotal_check", sql`${t.lineSubtotal} >= 0`),
     check("quote_lines_line_net_check", sql`${t.lineNet} >= 0`),
     check("quote_lines_line_tax_check", sql`${t.lineTax} >= 0`),

@@ -3,8 +3,14 @@ import { evaluateRisk } from "../../src/domain/quotes/risk.js";
 
 describe("evaluateRisk pure", () => {
   const basePolicy = {
-    tierLimits: [{ tierCode: "Gold", ceilingPct: "15.00" }, { tierCode: "Bronze", ceilingPct: "5.00" }],
-    categoryLimits: [{ categoryCode: "Hardware", ceilingPct: "10.00" }, { categoryCode: "Services", ceilingPct: "20.00" }],
+    tierLimits: [
+      { tierCode: "Gold", ceilingPct: "15.00" },
+      { tierCode: "Bronze", ceilingPct: "5.00" },
+    ],
+    categoryLimits: [
+      { categoryCode: "Hardware", ceilingPct: "10.00" },
+      { categoryCode: "Services", ceilingPct: "20.00" },
+    ],
   };
 
   it("none when no overage", () => {
@@ -109,7 +115,12 @@ describe("evaluateRisk pure", () => {
       lines: [{ discountPct: "12.00", subtotal: "100.000000", categoryCode: "Hardware" }],
       customerTierCode: "Gold",
       discountPolicy: basePolicy,
-      approvalPolicy: { steps: [{ sequence: 1, role: "manager" }, { sequence: 2, role: "finance" }] },
+      approvalPolicy: {
+        steps: [
+          { sequence: 1, role: "manager" },
+          { sequence: 2, role: "finance" },
+        ],
+      },
     });
     expect(r.requiredSteps[0]!.role).toBe("manager");
   });

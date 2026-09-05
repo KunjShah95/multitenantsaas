@@ -89,7 +89,9 @@ async function seed() {
     );
   }
 
-  console.log("[seed] upserting Phase 3 demo config (tiers, categories, products, variants, warehouses)...");
+  console.log(
+    "[seed] upserting Phase 3 demo config (tiers, categories, products, variants, warehouses)...",
+  );
   for (const org of orgs) {
     // Tiers
     for (const tier of [
@@ -125,9 +127,33 @@ async function seed() {
     const svc = catByTenantCode.get(`${org.id}:Services`);
     // Products
     for (const prod of [
-      { sku: "LAP-PRO-15", name: "Laptop Pro 15", categoryId: hw?.id ?? null, unit: "ea", price: "1200.000000", cost: "800.000000", tax: "18.00" },
-      { sku: "SETUP-SVC", name: "Setup Service", categoryId: svc?.id ?? null, unit: "lot", price: "500.000000", cost: "300.000000", tax: "10.00" },
-      { sku: "SUP-STD", name: "Support Standard", categoryId: svc?.id ?? null, unit: "ea", price: "100.000000", cost: "40.000000", tax: "18.00" },
+      {
+        sku: "LAP-PRO-15",
+        name: "Laptop Pro 15",
+        categoryId: hw?.id ?? null,
+        unit: "ea",
+        price: "1200.000000",
+        cost: "800.000000",
+        tax: "18.00",
+      },
+      {
+        sku: "SETUP-SVC",
+        name: "Setup Service",
+        categoryId: svc?.id ?? null,
+        unit: "lot",
+        price: "500.000000",
+        cost: "300.000000",
+        tax: "10.00",
+      },
+      {
+        sku: "SUP-STD",
+        name: "Support Standard",
+        categoryId: svc?.id ?? null,
+        unit: "ea",
+        price: "100.000000",
+        cost: "40.000000",
+        tax: "18.00",
+      },
     ]) {
       await pool.query(
         `INSERT INTO products (tenant_id, category_id, sku, name, unit, standard_price, standard_cost, tax_rate_pct)
@@ -147,9 +173,15 @@ async function seed() {
         { sku: null, attribute: "RAM", value: "16GB", extraPrice: "150.000000" },
       ]) {
         // Check existence by product_id + attribute/value
-        const existing = await pool.query(`SELECT id FROM product_variants WHERE tenant_id=$1 AND product_id=$2 AND attribute=$3 AND value=$4`, [org.id, laptop.id, v.attribute, v.value]);
+        const existing = await pool.query(
+          `SELECT id FROM product_variants WHERE tenant_id=$1 AND product_id=$2 AND attribute=$3 AND value=$4`,
+          [org.id, laptop.id, v.attribute, v.value],
+        );
         if (existing.rows.length === 0) {
-          await pool.query(`INSERT INTO product_variants (tenant_id, product_id, attribute, value, extra_price) VALUES ($1,$2,$3,$4,$5)`, [org.id, laptop.id, v.attribute, v.value, v.extraPrice]);
+          await pool.query(
+            `INSERT INTO product_variants (tenant_id, product_id, attribute, value, extra_price) VALUES ($1,$2,$3,$4,$5)`,
+            [org.id, laptop.id, v.attribute, v.value, v.extraPrice],
+          );
         }
       }
     }
@@ -180,8 +212,20 @@ async function seed() {
   // Plans and upsell for demo
   for (const org of orgs) {
     for (const plan of [
-      { code: "basic-monthly", name: "Basic Monthly", interval: "monthly", price: "99.000000", currency: "USD" },
-      { code: "pro-yearly", name: "Pro Yearly", interval: "yearly", price: "999.000000", currency: "USD" },
+      {
+        code: "basic-monthly",
+        name: "Basic Monthly",
+        interval: "monthly",
+        price: "99.000000",
+        currency: "USD",
+      },
+      {
+        code: "pro-yearly",
+        name: "Pro Yearly",
+        interval: "yearly",
+        price: "999.000000",
+        currency: "USD",
+      },
     ]) {
       await pool.query(
         `INSERT INTO subscription_plans (tenant_id, code, name, billing_interval, price, currency) VALUES ($1,$2,$3,$4,$5,$6)
@@ -192,7 +236,14 @@ async function seed() {
   }
 
   // Verify idempotency: second run should not error and counts stable
-  console.log("[seed] done — tenants:", TENANTS.length, "users:", USERS.length, "customers:", CUSTOMERS.length);
+  console.log(
+    "[seed] done — tenants:",
+    TENANTS.length,
+    "users:",
+    USERS.length,
+    "customers:",
+    CUSTOMERS.length,
+  );
   await pool.end();
 }
 

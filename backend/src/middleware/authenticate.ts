@@ -76,7 +76,8 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
 // Optional authenticate for portal (cookie-based, also accepts Authorization Bearer for tests)
 export async function authenticatePortal(req: Request, _res: Response, next: NextFunction) {
   try {
-    const cookieToken = (req as unknown as { cookies?: Record<string, string> }).cookies?.portal_token;
+    const cookieToken = (req as unknown as { cookies?: Record<string, string> }).cookies
+      ?.portal_token;
     const header = req.headers.authorization;
     const bearer = header?.startsWith("Bearer ") ? header.slice(7).trim() : undefined;
     // also allow x-portal-token header for test convenience

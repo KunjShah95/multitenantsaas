@@ -12,10 +12,17 @@ async function login(email: string, password: string, slug?: string) {
   return r.body.data.accessToken as string;
 }
 
-async function convertReadyQuote(token: string, customerId: string, payload: Record<string, unknown>[]) {
-  const q = await request(app).post("/api/v1/quotes").set("Authorization", `Bearer ${token}`).send({ customerId, currency: "USD" });
+async function convertReadyQuote(
+  token: string,
+  customerId: string,
+  payload: Record<string, unknown>[],
+) {
+  const q = await request(app)
+    .post("/api/v1/quotes")
+    .set("Authorization", `Bearer ${token}`)
+    .send({ customerId, currency: "USD" });
   expect(q.status).toBe(201);
-  let qid = q.body.data.id;
+  const qid = q.body.data.id;
   let rev = q.body.data.revision;
 
   for (const line of payload) {
@@ -56,7 +63,9 @@ describe("Phase 8 Subscriptions & Billing", () => {
     acmeRep = await login("bob@acme.test", "DemoPass123!", "acme");
     globexAdmin = await login("carol@globex.test", "DemoPass123!", "globex");
 
-    const custRes = await request(app).get("/api/v1/customers").set("Authorization", `Bearer ${acmeAdmin}`);
+    const custRes = await request(app)
+      .get("/api/v1/customers")
+      .set("Authorization", `Bearer ${acmeAdmin}`);
     customerId = custRes.body.data[0].id;
 
     const sku = `SKU-P8-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
@@ -73,11 +82,15 @@ describe("Phase 8 Subscriptions & Billing", () => {
     expect(prodRes.status).toBe(201);
     prodId = prodRes.body.data.id;
 
-    const plans = await request(app).get("/api/v1/subscription-plans").set("Authorization", `Bearer ${acmeAdmin}`);
+    const plans = await request(app)
+      .get("/api/v1/subscription-plans")
+      .set("Authorization", `Bearer ${acmeAdmin}`);
     expect(plans.status).toBe(200);
     planId = plans.body.data[0].id;
 
-    const whRes = await request(app).get("/api/v1/warehouses").set("Authorization", `Bearer ${acmeAdmin}`);
+    const whRes = await request(app)
+      .get("/api/v1/warehouses")
+      .set("Authorization", `Bearer ${acmeAdmin}`);
     warehouseId = whRes.body.data[0].id;
 
     await request(app)
@@ -119,7 +132,9 @@ describe("Phase 8 Subscriptions & Billing", () => {
       .query({ customerId })
       .set("Authorization", `Bearer ${acmeAdmin}`);
     expect(subs.status).toBe(200);
-    const created = subs.body.subscriptions.filter((s: { orderId: string }) => s.orderId === order.id);
+    const created = subs.body.subscriptions.filter(
+      (s: { orderId: string }) => s.orderId === order.id,
+    );
     expect(created).toHaveLength(1);
     expect(created[0].status).toBe("active");
     expect(created[0].billingTimezone).toBe("UTC");
@@ -208,11 +223,15 @@ describe("Phase 8 Subscriptions & Billing", () => {
       },
     ]);
 
-    const subs = await request(app).get("/api/v1/subscriptions").set("Authorization", `Bearer ${acmeAdmin}`);
+    const subs = await request(app)
+      .get("/api/v1/subscriptions")
+      .set("Authorization", `Bearer ${acmeAdmin}`);
     const sub = subs.body.subscriptions.find((s: { orderId: string }) => s.orderId === order.id);
     expect(sub).toBeTruthy();
 
-    const mid = new Date((new Date(sub.currentPeriodStart).getTime() + new Date(sub.currentPeriodEnd).getTime()) / 2);
+    const mid = new Date(
+      (new Date(sub.currentPeriodStart).getTime() + new Date(sub.currentPeriodEnd).getTime()) / 2,
+    );
 
     const preview = await request(app)
       .post(`/api/v1/subscriptions/${sub.id}/changes/preview`)

@@ -15,10 +15,7 @@ export type AuditInput = {
  * Transactional audit write — must be called with the same tx as business mutation.
  * Caller must already be inside withTenantTransaction.
  */
-export async function writeAuditEvent(
-  tx: Db,
-  input: AuditInput,
-): Promise<void> {
+export async function writeAuditEvent(tx: Db, input: AuditInput): Promise<void> {
   // Db type is union of Pool DB and transaction; insert is available on both
   await (tx as unknown as Db).insert(auditEvents).values({
     tenantId: input.tenantId,

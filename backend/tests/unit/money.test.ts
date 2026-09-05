@@ -72,8 +72,22 @@ describe("money rounding - half-up to 6 decimals", () => {
   it("calcTotals aggregates correctly", () => {
     const totals = calcTotals({
       lines: [
-        { subtotal: "200.000000", discountAmount: "20.000000", net: "180.000000", tax: "18.000000", total: "198.000000", margin: "60.000000" },
-        { subtotal: "50.000000", discountAmount: "0.000000", net: "50.000000", tax: "5.000000", total: "55.000000", margin: "30.000000" },
+        {
+          subtotal: "200.000000",
+          discountAmount: "20.000000",
+          net: "180.000000",
+          tax: "18.000000",
+          total: "198.000000",
+          margin: "60.000000",
+        },
+        {
+          subtotal: "50.000000",
+          discountAmount: "0.000000",
+          net: "50.000000",
+          tax: "5.000000",
+          total: "55.000000",
+          margin: "30.000000",
+        },
       ],
     });
     expect(totals.subtotal).toBe("250.000000");
@@ -101,13 +115,36 @@ describe("money rounding - half-up to 6 decimals", () => {
     expect(formatMoney(parseMoney(large))).toBe(large);
     // 0.1 + 0.2 = 0.3 exact with our library, not float 0.30000000004
     const a = calcTotals({
-      lines: [{ subtotal: "0.100000", discountAmount: "0.000000", net: "0.100000", tax: "0.000000", total: "0.100000", margin: "0.000000" }],
+      lines: [
+        {
+          subtotal: "0.100000",
+          discountAmount: "0.000000",
+          net: "0.100000",
+          tax: "0.000000",
+          total: "0.100000",
+          margin: "0.000000",
+        },
+      ],
     });
     // add second
     const b = calcTotals({
       lines: [
-        { subtotal: "0.100000", discountAmount: "0.000000", net: "0.100000", tax: "0.000000", total: "0.100000", margin: "0.000000" },
-        { subtotal: "0.200000", discountAmount: "0.000000", net: "0.200000", tax: "0.000000", total: "0.200000", margin: "0.000000" },
+        {
+          subtotal: "0.100000",
+          discountAmount: "0.000000",
+          net: "0.100000",
+          tax: "0.000000",
+          total: "0.100000",
+          margin: "0.000000",
+        },
+        {
+          subtotal: "0.200000",
+          discountAmount: "0.000000",
+          net: "0.200000",
+          tax: "0.000000",
+          total: "0.200000",
+          margin: "0.000000",
+        },
       ],
     });
     expect(b.netTotal).toBe("0.300000");

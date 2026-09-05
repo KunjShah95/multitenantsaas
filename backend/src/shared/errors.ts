@@ -63,7 +63,7 @@ export function errorMiddleware(err: unknown, req: Request, res: Response, _next
   }
 
   // Unexpected — log with requestId, never leak internals
-  // eslint-disable-next-line no-console
+   
   console.error(`[${requestId}] unexpected error`, err);
   res.status(500).json(errorEnvelope("INTERNAL_ERROR", "Internal server error", requestId));
 }

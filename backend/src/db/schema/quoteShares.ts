@@ -1,4 +1,13 @@
-import { pgTable, uuid, text, timestamp, integer, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  integer,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { quotes } from "./quotes.js";
@@ -41,7 +50,11 @@ export const quoteShares = pgTable(
     index("quote_shares_version_idx").on(t.quoteId, t.versionNumber),
     index("quote_shares_expires_idx").on(t.expiresAt),
     // allow idempotent re-share without duplicate active row: unique on quote+contact+version when not revoked is enforced in app; keep a simple unique for duplicate detection via application idempotency
-    uniqueIndex("quote_shares_quote_contact_version_unique").on(t.quoteId, t.contactId, t.versionNumber),
+    uniqueIndex("quote_shares_quote_contact_version_unique").on(
+      t.quoteId,
+      t.contactId,
+      t.versionNumber,
+    ),
     check("quote_shares_version_check", sql`${t.versionNumber} >= 1`),
   ],
 );

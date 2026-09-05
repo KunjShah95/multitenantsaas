@@ -22,7 +22,10 @@ export const inventoryReservations = pgTable(
       .notNull()
       .references(() => orders.id, { onDelete: "cascade" }),
     orderLineId: uuid("order_line_id").references(() => orderLines.id, { onDelete: "cascade" }),
-    fulfillmentAllocationId: uuid("fulfillment_allocation_id").references(() => fulfillmentAllocations.id, { onDelete: "cascade" }),
+    fulfillmentAllocationId: uuid("fulfillment_allocation_id").references(
+      () => fulfillmentAllocations.id,
+      { onDelete: "cascade" },
+    ),
     status: text("status").notNull().default("active"),
     expiresAt: timestamp("expires_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -38,6 +41,9 @@ export const inventoryReservations = pgTable(
     index("inventory_reservations_expires_idx").on(t.expiresAt),
     check("inventory_reservations_sku_check", sql`char_length(${t.sku}) > 0`),
     check("inventory_reservations_quantity_check", sql`${t.quantity} > 0`),
-    check("inventory_reservations_status_check", sql`${t.status} IN ('active','shipped','released','expired')`),
+    check(
+      "inventory_reservations_status_check",
+      sql`${t.status} IN ('active','shipped','released','expired')`,
+    ),
   ],
 );

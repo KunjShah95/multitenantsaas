@@ -49,7 +49,9 @@ export const subscriptions = pgTable(
     snapshotSku: varchar("snapshot_sku", { length: 64 }).notNull(),
     snapshotUnit: varchar("snapshot_unit", { length: 32 }).notNull(),
     snapshotUnitPrice: numeric("snapshot_unit_price", { precision: 20, scale: 6 }).notNull(),
-    snapshotTaxRatePct: numeric("snapshot_tax_rate_pct", { precision: 5, scale: 2 }).notNull().default("0"),
+    snapshotTaxRatePct: numeric("snapshot_tax_rate_pct", { precision: 5, scale: 2 })
+      .notNull()
+      .default("0"),
     snapshotCurrency: varchar("snapshot_currency", { length: 3 }).notNull(),
     periodUnitNet: numeric("period_unit_net", { precision: 20, scale: 6 }).notNull(),
     periodUnitTax: numeric("period_unit_tax", { precision: 20, scale: 6 }).notNull(),

@@ -23,7 +23,11 @@ function getCtx(req: import("express").Request) {
 }
 
 function requireBillingRead(role: string) {
-  if (!hasPermission(role, "billing:manage") && !hasPermission(role, "invoice:manage") && !hasPermission(role, "order:view")) {
+  if (
+    !hasPermission(role, "billing:manage") &&
+    !hasPermission(role, "invoice:manage") &&
+    !hasPermission(role, "order:view")
+  ) {
     throw new ApiError(403, "FORBIDDEN", "Insufficient permissions");
   }
 }
@@ -122,7 +126,11 @@ billingRouter.post("/subscriptions/:id/changes/preview", async (req, res, next) 
     }
 
     const preview = await withTenantTransaction({ tenantId }, async (tx) => {
-      const { subscription } = await BillingService.getSubscriptionById(tx, tenantId, req.params.id);
+      const { subscription } = await BillingService.getSubscriptionById(
+        tx,
+        tenantId,
+        req.params.id,
+      );
       return BillingService.previewSubscriptionChange(subscription, {
         quantity: parsed.data.quantity,
         discountPct: parsed.data.discountPct,
@@ -161,7 +169,11 @@ billingRouter.post("/subscriptions/:id/changes", async (req, res, next) => {
           key: idemKey,
         });
         if (cached?.responseBody) {
-          return { isCached: true, status: Number(cached.responseStatus ?? 200), body: cached.responseBody as object };
+          return {
+            isCached: true,
+            status: Number(cached.responseStatus ?? 200),
+            body: cached.responseBody as object,
+          };
         }
       }
 
@@ -224,7 +236,11 @@ billingRouter.post("/subscriptions/:id/cancel", async (req, res, next) => {
           key: idemKey,
         });
         if (cached?.responseBody) {
-          return { isCached: true, status: Number(cached.responseStatus ?? 200), body: cached.responseBody as object };
+          return {
+            isCached: true,
+            status: Number(cached.responseStatus ?? 200),
+            body: cached.responseBody as object,
+          };
         }
       }
 
@@ -327,7 +343,11 @@ billingRouter.post("/invoices/:id/record-payment", async (req, res, next) => {
           key: idemKey,
         });
         if (cached?.responseBody) {
-          return { isCached: true, status: Number(cached.responseStatus ?? 200), body: cached.responseBody as object };
+          return {
+            isCached: true,
+            status: Number(cached.responseStatus ?? 200),
+            body: cached.responseBody as object,
+          };
         }
       }
 

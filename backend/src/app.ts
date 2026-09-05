@@ -17,6 +17,9 @@ import sharesRouter from "./api/v1/shares.routes.js";
 import portalQuotesRouter from "./api/v1/portal.routes.js";
 import { ordersRouter } from "./api/v1/orders.routes.js";
 import { billingRouter } from "./api/v1/billing.routes.js";
+import { healthRouter } from "./api/v1/health.routes.js";
+import { reportsRouter } from "./api/v1/reports.routes.js";
+import { eventsRouter } from "./api/v1/events.routes.js";
 
 export function createApp() {
   const env = getEnv();
@@ -34,7 +37,7 @@ export function createApp() {
   );
 
   // Structured HTTP logs (redacts secrets via logger config)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   app.use(
     (pinoHttp as unknown as (opts: any) => any)({
       logger,
@@ -81,6 +84,10 @@ export function createApp() {
   app.use("/api/v1", ordersRouter);
   // v1 API — Phase 08 subscriptions, invoices, and manual payments
   app.use("/api/v1", billingRouter);
+  // v1 API — Phase 09 health, reports, and events
+  app.use("/api/v1", healthRouter);
+  app.use("/api/v1", reportsRouter);
+  app.use("/api/v1", eventsRouter);
 
   // 404 for unknown routes — single error envelope
   app.use(notFoundHandler);

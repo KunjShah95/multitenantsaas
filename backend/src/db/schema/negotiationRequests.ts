@@ -17,7 +17,9 @@ export const negotiationRequests = pgTable(
     quoteId: uuid("quote_id")
       .notNull()
       .references(() => quotes.id, { onDelete: "cascade" }),
-    baseVersionId: uuid("base_version_id").references(() => quoteVersions.id, { onDelete: "set null" }),
+    baseVersionId: uuid("base_version_id").references(() => quoteVersions.id, {
+      onDelete: "set null",
+    }),
     baseVersionNumber: integer("base_version_number").notNull(),
     contactId: uuid("contact_id")
       .notNull()
@@ -42,6 +44,9 @@ export const negotiationRequests = pgTable(
     index("negotiation_requests_status_idx").on(t.status),
     index("negotiation_requests_created_idx").on(t.createdAt),
     check("negotiation_requests_version_check", sql`${t.baseVersionNumber} >= 1`),
-    check("negotiation_requests_status_check", sql`${t.status} IN ('pending','declined','clarification_requested','accepted_as_revision','superseded')`),
+    check(
+      "negotiation_requests_status_check",
+      sql`${t.status} IN ('pending','declined','clarification_requested','accepted_as_revision','superseded')`,
+    ),
   ],
 );

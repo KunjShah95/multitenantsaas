@@ -3,14 +3,26 @@ import { getDb } from "../../db/connection.js";
 import { organizations, users, memberships, sessions, invitations } from "../../db/schema/index.js";
 import { hashPassword, verifyPassword, validatePasswordStrength } from "../../auth/password.js";
 import { signAccessToken } from "../../auth/tokens.js";
-import { generateOpaqueToken, hashToken, getRefreshExpiry, getInvitationExpiry, getRefreshCookieOptions } from "../../auth/session.js";
+import {
+  generateOpaqueToken,
+  hashToken,
+  getRefreshExpiry,
+  getInvitationExpiry,
+  getRefreshCookieOptions,
+} from "../../auth/session.js";
 import { getEmailAdapter } from "../../integrations/email/index.js";
 import { ApiError } from "../../shared/errors.js";
 import { writeAuditEvent } from "../../shared/audit.js";
 import { getPermissionsForRole } from "../../auth/permissions.js";
 
 type LoginInput = { email: string; password: string; organizationSlug?: string };
-type BootstrapInput = { organizationName: string; slug: string; adminName: string; adminEmail: string; password: string };
+type BootstrapInput = {
+  organizationName: string;
+  slug: string;
+  adminName: string;
+  adminEmail: string;
+  password: string;
+};
 
 export async function login(input: LoginInput, requestId?: string) {
   const db = getDb();
@@ -26,7 +38,11 @@ export async function login(input: LoginInput, requestId?: string) {
 
   let activeMembership = mems[0]!;
   if (input.organizationSlug) {
-    const orgRows = await db.select().from(organizations).where(eq(organizations.slug, input.organizationSlug)).limit(1);
+    const orgRows = await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.slug, input.organizationSlug))
+      .limit(1);
     const org = orgRows[0];
     if (!org) throw new ApiError(404, "NOT_FOUND", "Organization not found");
     const found = mems.find((m) => m.tenantId === org.id);
@@ -57,7 +73,11 @@ export async function login(input: LoginInput, requestId?: string) {
     email: user.email,
   });
 
-  const orgRows = await db.select().from(organizations).where(eq(organizations.id, activeMembership.tenantId)).limit(1);
+  const orgRows = await db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.id, activeMembership.tenantId))
+    .limit(1);
   const org = orgRows[0]!;
 
   // Audit (best effort, use same tenant context)
@@ -79,7 +99,11 @@ export async function login(input: LoginInput, requestId?: string) {
     refreshCookieOptions: getRefreshCookieOptions(),
     user: { id: user.id, email: user.email, name: user.name },
     organization: { id: org.id, name: org.name, slug: org.slug },
-    membership: { id: activeMembership.id, role: activeMembership.role, tenantId: activeMembership.tenantId },
+    membership: {
+      id: activeMembership.id,
+      role: activeMembership.role,
+      tenantId: activeMembership.tenantId,
+    },
   };
 }
 
@@ -156,12 +180,17 @@ export async function getMe(userId: string, tenantId: string, sessionId: string)
   const membership = memRows[0];
   if (!membership) throw new ApiError(403, "FORBIDDEN", "No membership in active organization");
 
-  const orgRows = await db.select().from(organizations).where(eq(organizations.id, tenantId)).limit(1);
+  const orgRows = await db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.id, tenantId))
+    .limit(1);
   const org = orgRows[0]!;
 
   const sessRows = await db.select().from(sessions).where(eq(sessions.id, sessionId)).limit(1);
   const sess = sessRows[0];
-  if (!sess || sess.revokedAt || sess.expiresAt < new Date()) throw new ApiError(401, "UNAUTHORIZED", "Session invalid");
+  if (!sess || sess.revokedAt || sess.expiresAt < new Date())
+    throw new ApiError(401, "UNAUTHORIZED", "Session invalid");
 
   const permissions = getPermissionsForRole(membership.role);
 
@@ -173,7 +202,11 @@ export async function getMe(userId: string, tenantId: string, sessionId: string)
   };
 }
 
-export async function switchOrganization(userId: string, currentTenantId: string, targetOrgId: string) {
+export async function switchOrganization(
+  userId: string,
+  currentTenantId: string,
+  targetOrgId: string,
+) {
   const db = getDb();
   // Verify user is member of target
   const memRows = await db
@@ -211,7 +244,11 @@ export async function switchOrganization(userId: string, currentTenantId: string
     email: user.email,
   });
 
-  const orgRows = await db.select().from(organizations).where(eq(organizations.id, targetOrgId)).limit(1);
+  const orgRows = await db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.id, targetOrgId))
+    .limit(1);
   const org = orgRows[0]!;
 
   return {
@@ -226,21 +263,37 @@ export async function switchOrganization(userId: string, currentTenantId: string
 export async function bootstrap(input: BootstrapInput) {
   const db = getDb();
   const orgCount = await db.select().from(organizations).limit(1);
-  if (orgCount.length > 0) throw new ApiError(403, "FORBIDDEN", "Bootstrap not allowed after initial setup");
+  if (orgCount.length > 0)
+    throw new ApiError(403, "FORBIDDEN", "Bootstrap not allowed after initial setup");
 
   const pwdErr = validatePasswordStrength(input.password);
   if (pwdErr) throw new ApiError(400, "BAD_REQUEST", pwdErr);
 
-  const slugExists = await db.select().from(organizations).where(eq(organizations.slug, input.slug)).limit(1);
-  if (slugExists.length > 0) throw new ApiError(409, "CONFLICT", "Organization slug already exists");
+  const slugExists = await db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.slug, input.slug))
+    .limit(1);
+  if (slugExists.length > 0)
+    throw new ApiError(409, "CONFLICT", "Organization slug already exists");
 
-  const emailExists = await db.select().from(users).where(eq(users.email, input.adminEmail)).limit(1);
+  const emailExists = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, input.adminEmail))
+    .limit(1);
   if (emailExists.length > 0) throw new ApiError(409, "CONFLICT", "Email already exists");
 
   const hash = await hashPassword(input.password);
 
-  const [org] = await db.insert(organizations).values({ name: input.organizationName, slug: input.slug }).returning();
-  const [user] = await db.insert(users).values({ email: input.adminEmail, name: input.adminName, passwordHash: hash }).returning();
+  const [org] = await db
+    .insert(organizations)
+    .values({ name: input.organizationName, slug: input.slug })
+    .returning();
+  const [user] = await db
+    .insert(users)
+    .values({ email: input.adminEmail, name: input.adminName, passwordHash: hash })
+    .returning();
   const [membership] = await db
     .insert(memberships)
     .values({ tenantId: org!.id, userId: user!.id, role: "admin" })
@@ -271,7 +324,11 @@ export async function bootstrap(input: BootstrapInput) {
   };
 }
 
-export async function createInvitation(actor: { userId: string; tenantId: string; role: string }, input: { email: string; role: string }, requestId?: string) {
+export async function createInvitation(
+  actor: { userId: string; tenantId: string; role: string },
+  input: { email: string; role: string },
+  requestId?: string,
+) {
   if (actor.role !== "admin") throw new ApiError(403, "FORBIDDEN", "Only admin can invite");
   const db = getDb();
 
@@ -292,7 +349,11 @@ export async function createInvitation(actor: { userId: string; tenantId: string
       })
       .returning();
 
-    const orgRows = await db.select().from(organizations).where(eq(organizations.id, actor.tenantId)).limit(1);
+    const orgRows = await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.id, actor.tenantId))
+      .limit(1);
     const org = orgRows[0];
     const adapter = getEmailAdapter();
     await adapter.send({
@@ -315,9 +376,14 @@ export async function createInvitation(actor: { userId: string; tenantId: string
 
     return { id: inv!.id, email: inv!.email, role: inv!.role, expiresAt: inv!.expiresAt };
   } catch (e: unknown) {
-    const pg = e as { code?: string; cause?: { code?: string; message?: string }; message?: string };
+    const pg = e as {
+      code?: string;
+      cause?: { code?: string; message?: string };
+      message?: string;
+    };
     const code = pg.code ?? pg.cause?.code;
-    if (code === "23505") throw new ApiError(409, "CONFLICT", "Invitation already exists for this email");
+    if (code === "23505")
+      throw new ApiError(409, "CONFLICT", "Invitation already exists for this email");
     if (code === "23514") throw new ApiError(400, "BAD_REQUEST", "Invalid role");
     throw e;
   }
@@ -326,7 +392,11 @@ export async function createInvitation(actor: { userId: string; tenantId: string
 export async function acceptInvitation(input: { token: string; name: string; password: string }) {
   const tokenHash = hashToken(input.token);
   const db = getDb();
-  const rows = await db.select().from(invitations).where(eq(invitations.tokenHash, tokenHash)).limit(1);
+  const rows = await db
+    .select()
+    .from(invitations)
+    .where(eq(invitations.tokenHash, tokenHash))
+    .limit(1);
   const inv = rows[0];
   if (!inv) throw new ApiError(400, "BAD_REQUEST", "Invalid invitation token");
   if (inv.acceptedAt) throw new ApiError(409, "CONFLICT", "Invitation already accepted");
@@ -340,20 +410,28 @@ export async function acceptInvitation(input: { token: string; name: string; pas
   let user = existingUsers[0];
   if (!user) {
     const hash = await hashPassword(input.password);
-    const [u] = await db.insert(users).values({ email: inv.email, name: input.name, passwordHash: hash }).returning();
+    const [u] = await db
+      .insert(users)
+      .values({ email: inv.email, name: input.name, passwordHash: hash })
+      .returning();
     user = u!;
   } else {
     // If user exists, do not overwrite password unless no passwordHash (preserve)
     if (!user.passwordHash) {
       const hash = await hashPassword(input.password);
-      await db.update(users).set({ passwordHash: hash, name: input.name }).where(eq(users.id, user.id));
+      await db
+        .update(users)
+        .set({ passwordHash: hash, name: input.name })
+        .where(eq(users.id, user.id));
     }
     // verify that invitation role is used, not client-chosen
   }
 
   // Create membership with invitation role (cannot escalate)
   try {
-    await db.insert(memberships).values({ tenantId: inv.tenantId, userId: user.id, role: inv.role });
+    await db
+      .insert(memberships)
+      .values({ tenantId: inv.tenantId, userId: user.id, role: inv.role });
   } catch (e: unknown) {
     const pg = e as { code?: string; cause?: { code?: string } };
     const code = pg.code ?? pg.cause?.code;
@@ -372,7 +450,12 @@ export async function acceptInvitation(input: { token: string; name: string; pas
   const sessHash = hashToken(raw);
   const [sess] = await db
     .insert(sessions)
-    .values({ tenantId: inv.tenantId, userId: user.id, tokenHash: sessHash, expiresAt: getRefreshExpiry() })
+    .values({
+      tenantId: inv.tenantId,
+      userId: user.id,
+      tokenHash: sessHash,
+      expiresAt: getRefreshExpiry(),
+    })
     .returning();
 
   const accessToken = signAccessToken({
@@ -383,7 +466,11 @@ export async function acceptInvitation(input: { token: string; name: string; pas
     email: user.email,
   });
 
-  const orgRows = await db.select().from(organizations).where(eq(organizations.id, inv.tenantId)).limit(1);
+  const orgRows = await db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.id, inv.tenantId))
+    .limit(1);
   const org = orgRows[0]!;
 
   return {

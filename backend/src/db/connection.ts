@@ -26,7 +26,7 @@ export function getDb(): Db {
   });
 
   pool.on("error", (err) => {
-    // eslint-disable-next-line no-console
+     
     console.error("[db] pool idle client error", err);
   });
 

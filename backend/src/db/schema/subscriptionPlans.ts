@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 
@@ -23,7 +33,10 @@ export const subscriptionPlans = pgTable(
     index("subscription_plans_tenant_idx").on(t.tenantId),
     check("subscription_plans_code_check", sql`char_length(${t.code}) > 0`),
     check("subscription_plans_name_check", sql`char_length(${t.name}) > 0`),
-    check("subscription_plans_interval_check", sql`${t.billingInterval} IN ('monthly','quarterly','yearly')`),
+    check(
+      "subscription_plans_interval_check",
+      sql`${t.billingInterval} IN ('monthly','quarterly','yearly')`,
+    ),
     check("subscription_plans_price_check", sql`${t.price} >= 0`),
     check("subscription_plans_currency_check", sql`char_length(${t.currency}) = 3`),
   ],

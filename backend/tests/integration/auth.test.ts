@@ -53,20 +53,26 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
   });
 
   it("POST /api/v1/auth/login — wrong password returns 401 with error envelope", async () => {
-    const res = await request(app).post("/api/v1/auth/login").send({ email: "alice@acme.test", password: "wrong" });
+    const res = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "alice@acme.test", password: "wrong" });
     expect(res.status).toBe(401);
     expect(res.body.error.code).toBe("UNAUTHORIZED");
     expect(res.body.error.requestId).toBeDefined();
   });
 
   it("POST /api/v1/auth/login — validation 400", async () => {
-    const res = await request(app).post("/api/v1/auth/login").send({ email: "not-an-email", password: "" });
+    const res = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "not-an-email", password: "" });
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe("BAD_REQUEST");
   });
 
   it("GET /api/v1/me — with valid token returns permissions and organization", async () => {
-    const res = await request(app).get("/api/v1/me").set("Authorization", `Bearer ${adminAccessToken}`);
+    const res = await request(app)
+      .get("/api/v1/me")
+      .set("Authorization", `Bearer ${adminAccessToken}`);
     expect(res.status).toBe(200);
     expect(res.body.data.user.email).toBe("alice@acme.test");
     expect(res.body.data.permissions).toContain("org:manage");
@@ -94,9 +100,13 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
 
   it("POST /api/v1/auth/logout — revokes session and clears cookie", async () => {
     // Login as rep to test logout separately
-    const login = await request(app).post("/api/v1/auth/login").send({ email: "bob@acme.test", password: DEMO_PASSWORD });
+    const login = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "bob@acme.test", password: DEMO_PASSWORD });
     expect(login.status).toBe(200);
-    const repCookie = (login.headers["set-cookie"] as unknown as string[]).find((c) => c.startsWith("refresh_token="))!.split(";")[0]!;
+    const repCookie = (login.headers["set-cookie"] as unknown as string[])
+      .find((c) => c.startsWith("refresh_token="))!
+      .split(";")[0]!;
     repAccessToken = login.body.data.accessToken;
     repTenantId = login.body.data.organization.id;
 
@@ -107,7 +117,9 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
     expect(after.status).toBe(401);
 
     // Re-login rep for later role tests
-    const relogin = await request(app).post("/api/v1/auth/login").send({ email: "bob@acme.test", password: DEMO_PASSWORD });
+    const relogin = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "bob@acme.test", password: DEMO_PASSWORD });
     repAccessToken = relogin.body.data.accessToken;
     repTenantId = relogin.body.data.organization.id;
   });
@@ -123,17 +135,32 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
 
     // Create a user with two memberships for switch test — use carol who is admin of globex, add her to acme as rep via DB then switch
     const db = getDbRaw();
-    const aliceRows = await db.select().from(users).where(eq(users.email, "carol@globex.test")).limit(1);
+    const aliceRows = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, "carol@globex.test"))
+      .limit(1);
     const carol = aliceRows[0]!;
     // Ensure carol also in acme
-    const orgAcme = (await db.select().from((await import("../../src/db/schema/index.js")).organizations).where(eq((await import("../../src/db/schema/index.js")).organizations.slug, "acme")).limit(1))[0]!;
+    const orgAcme = (
+      await db
+        .select()
+        .from((await import("../../src/db/schema/index.js")).organizations)
+        .where(eq((await import("../../src/db/schema/index.js")).organizations.slug, "acme"))
+        .limit(1)
+    )[0]!;
     // Insert membership if not exists
     const { Pool } = await import("pg");
     const pool = new Pool({ connectionString: process.env.DATABASE_URL_UNPOOLED!, max: 1 });
-    await pool.query(`INSERT INTO memberships (tenant_id, user_id, role) VALUES ($1,$2,'rep') ON CONFLICT (tenant_id, user_id) DO NOTHING`, [orgAcme.id, carol.id]);
+    await pool.query(
+      `INSERT INTO memberships (tenant_id, user_id, role) VALUES ($1,$2,'rep') ON CONFLICT (tenant_id, user_id) DO NOTHING`,
+      [orgAcme.id, carol.id],
+    );
     await pool.end();
 
-    const carolLogin = await request(app).post("/api/v1/auth/login").send({ email: "carol@globex.test", password: DEMO_PASSWORD });
+    const carolLogin = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "carol@globex.test", password: DEMO_PASSWORD });
     expect(carolLogin.status).toBe(200);
     const carolToken = carolLogin.body.data.accessToken;
     const switchRes = await request(app)
@@ -190,14 +217,20 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
     // Need raw token — fetch from DB directly (since console adapter doesn't return it)
     const db = getDbRaw();
     const { invitations } = await import("../../src/db/schema/index.js");
-    const rows = await db.select().from(invitations).where(eq(invitations.email, inviteEmail)).limit(1);
+    const rows = await db
+      .select()
+      .from(invitations)
+      .where(eq(invitations.email, inviteEmail))
+      .limit(1);
     const invRow = rows[0]!;
     // To get raw token we would need to have captured it; instead test accept via DB hash reconstruction
     // We generate a fresh invitation with known raw for determinism
     const raw = generateOpaqueToken(24);
     const hash = hashToken(raw);
     const { organizations } = await import("../../src/db/schema/index.js");
-    const org = (await db.select().from(organizations).where(eq(organizations.slug, "acme")).limit(1))[0]!;
+    const org = (
+      await db.select().from(organizations).where(eq(organizations.slug, "acme")).limit(1)
+    )[0]!;
     const escalationEmail = `accept-escalation-${Date.now()}@test.local`;
     await db.insert(invitations).values({
       tenantId: org.id,
@@ -205,13 +238,20 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
       role: "rep",
       tokenHash: hash,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      createdBy: (await db.select().from(users).where(eq(users.email, "alice@acme.test")).limit(1))[0]!.id,
+      createdBy: (
+        await db.select().from(users).where(eq(users.email, "alice@acme.test")).limit(1)
+      )[0]!.id,
     });
 
     // Try to accept — even if attacker sends extra role field, it should be ignored (schema strict)
     const accept = await request(app)
       .post("/api/v1/auth/invitations/accept")
-      .send({ token: raw, name: "Accepted User", password: "Password123!", role: "admin" } as unknown as Record<string, unknown>);
+      .send({
+        token: raw,
+        name: "Accepted User",
+        password: "Password123!",
+        role: "admin",
+      } as unknown as Record<string, unknown>);
     // Should be 400 due to strict schema rejecting extra role, or 201 with rep role if we strip
     // Our schema is strict, so extra field causes 400 — verify escalation blocked
     expect([400, 201]).toContain(accept.status);
@@ -229,7 +269,9 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
       role: "finance",
       tokenHash: hash2,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      createdBy: (await db.select().from(users).where(eq(users.email, "alice@acme.test")).limit(1))[0]!.id,
+      createdBy: (
+        await db.select().from(users).where(eq(users.email, "alice@acme.test")).limit(1)
+      )[0]!.id,
     });
     const accept2 = await request(app)
       .post("/api/v1/auth/invitations/accept")
@@ -245,7 +287,9 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
   });
 
   it("POST /api/v1/portal/auth/request-link — neutral 202 for unknown and known email, no token leakage", async () => {
-    const unknown = await request(app).post("/api/v1/portal/auth/request-link").send({ email: "unknown-portal@test.local" });
+    const unknown = await request(app)
+      .post("/api/v1/portal/auth/request-link")
+      .send({ email: "unknown-portal@test.local" });
     expect(unknown.status).toBe(202);
     expect(unknown.body.data.message).toMatch(/If an account exists/);
     expect(JSON.stringify(unknown.body)).not.toMatch(/token/i);
@@ -253,31 +297,69 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
     // Ensure known contact also 202 and leaked token not in response
     // Create a customer and contact for acme
     const db = getDbRaw();
-    const org = (await db.select().from((await import("../../src/db/schema/index.js")).organizations).where(eq((await import("../../src/db/schema/index.js")).organizations.slug, "acme")).limit(1))[0]!;
-    const cust = (await db.select().from((await import("../../src/db/schema/index.js")).customers).where(eq((await import("../../src/db/schema/index.js")).customers.tenantId, org.id)).limit(1))[0]!;
+    const org = (
+      await db
+        .select()
+        .from((await import("../../src/db/schema/index.js")).organizations)
+        .where(eq((await import("../../src/db/schema/index.js")).organizations.slug, "acme"))
+        .limit(1)
+    )[0]!;
+    const cust = (
+      await db
+        .select()
+        .from((await import("../../src/db/schema/index.js")).customers)
+        .where(eq((await import("../../src/db/schema/index.js")).customers.tenantId, org.id))
+        .limit(1)
+    )[0]!;
     const contactEmail = `portal-${Date.now()}@test.local`;
     const { customerContacts } = await import("../../src/db/schema/index.js");
-    await db.insert(customerContacts).values({ tenantId: org.id, customerId: cust.id, name: "Portal User", email: contactEmail });
+    await db
+      .insert(customerContacts)
+      .values({ tenantId: org.id, customerId: cust.id, name: "Portal User", email: contactEmail });
 
-    const known = await request(app).post("/api/v1/portal/auth/request-link").send({ email: contactEmail });
+    const known = await request(app)
+      .post("/api/v1/portal/auth/request-link")
+      .send({ email: contactEmail });
     expect(known.status).toBe(202);
     expect(JSON.stringify(known.body)).not.toContain(contactEmail); // no leakage of token
   });
 
   it("POST /api/v1/portal/auth/exchange-link — single-use and expired fails", async () => {
     const db = getDbRaw();
-    const org = (await db.select().from((await import("../../src/db/schema/index.js")).organizations).where(eq((await import("../../src/db/schema/index.js")).organizations.slug, "acme")).limit(1))[0]!;
-    const cust = (await db.select().from((await import("../../src/db/schema/index.js")).customers).where(eq((await import("../../src/db/schema/index.js")).customers.tenantId, org.id)).limit(1))[0]!;
+    const org = (
+      await db
+        .select()
+        .from((await import("../../src/db/schema/index.js")).organizations)
+        .where(eq((await import("../../src/db/schema/index.js")).organizations.slug, "acme"))
+        .limit(1)
+    )[0]!;
+    const cust = (
+      await db
+        .select()
+        .from((await import("../../src/db/schema/index.js")).customers)
+        .where(eq((await import("../../src/db/schema/index.js")).customers.tenantId, org.id))
+        .limit(1)
+    )[0]!;
     const contactEmail = `portal-exchange-${Date.now()}@test.local`;
     const { customerContacts, portalMagicLinks } = await import("../../src/db/schema/index.js");
-    const [contact] = await db.insert(customerContacts).values({ tenantId: org.id, customerId: cust.id, name: "Exchange User", email: contactEmail }).returning();
+    const [contact] = await db
+      .insert(customerContacts)
+      .values({ tenantId: org.id, customerId: cust.id, name: "Exchange User", email: contactEmail })
+      .returning();
 
     // Create magic link with known raw
     const raw = generateOpaqueToken(32);
     const hash = hashToken(raw);
-    await db.insert(portalMagicLinks).values({ tenantId: org.id, contactId: contact!.id, tokenHash: hash, expiresAt: new Date(Date.now() + 15 * 60 * 1000) });
+    await db.insert(portalMagicLinks).values({
+      tenantId: org.id,
+      contactId: contact!.id,
+      tokenHash: hash,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+    });
 
-    const exchange = await request(app).post("/api/v1/portal/auth/exchange-link").send({ token: raw });
+    const exchange = await request(app)
+      .post("/api/v1/portal/auth/exchange-link")
+      .send({ token: raw });
     expect(exchange.status).toBe(200);
     const cookies = exchange.headers["set-cookie"] as unknown as string[];
     expect(cookies.find((c) => c.startsWith("portal_token="))).toBeDefined();
@@ -289,8 +371,15 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
     // Expired token fails
     const rawExp = generateOpaqueToken(32);
     const hashExp = hashToken(rawExp);
-    await db.insert(portalMagicLinks).values({ tenantId: org.id, contactId: contact!.id, tokenHash: hashExp, expiresAt: new Date(Date.now() - 1000) });
-    const expired = await request(app).post("/api/v1/portal/auth/exchange-link").send({ token: rawExp });
+    await db.insert(portalMagicLinks).values({
+      tenantId: org.id,
+      contactId: contact!.id,
+      tokenHash: hashExp,
+      expiresAt: new Date(Date.now() - 1000),
+    });
+    const expired = await request(app)
+      .post("/api/v1/portal/auth/exchange-link")
+      .send({ token: rawExp });
     expect(expired.status).toBe(401);
   });
 
@@ -307,7 +396,9 @@ describe("Phase 02 — Auth & Authorization (Neon-backed)", () => {
   it("rate limiting — auth endpoints limited", async () => {
     // This is a smoke check; actual limit is 20 per 15min, we just verify 429 handler exists via repeated calls would be heavy
     // Instead verify that limiter is attached by checking that excessive body still 400 not 500
-    const res = await request(app).post("/api/v1/auth/login").send({ email: "a@b.c", password: "x" });
+    const res = await request(app)
+      .post("/api/v1/auth/login")
+      .send({ email: "a@b.c", password: "x" });
     expect([401, 400]).toContain(res.status);
   });
 });

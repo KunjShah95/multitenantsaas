@@ -129,7 +129,10 @@ export function computeCancellationCredit(
   const periodMs = periodEnd.getTime() - periodStart.getTime();
   if (periodMs <= 0) throw new Error("Invalid billing period");
 
-  const clampedEffective = Math.max(periodStart.getTime(), Math.min(effectiveAt.getTime(), periodEnd.getTime()));
+  const clampedEffective = Math.max(
+    periodStart.getTime(),
+    Math.min(effectiveAt.getTime(), periodEnd.getTime()),
+  );
   const remainingMs = periodEnd.getTime() - clampedEffective;
   const fractionMicro = BigInt(Math.round((remainingMs / periodMs) * 1_000_000));
   const remainingFraction = (Number(fractionMicro) / 1_000_000).toFixed(6);
@@ -149,7 +152,10 @@ export function computeCancellationCredit(
 }
 
 /** Signed delta helpers for storage — store absolute amount + type on adjustment. */
-export function signedTotalDelta(direction: ProrationResult["direction"], totalDelta: string): string {
+export function signedTotalDelta(
+  direction: ProrationResult["direction"],
+  totalDelta: string,
+): string {
   if (direction === "debit") return totalDelta;
   if (direction === "credit") return `-${totalDelta}`;
   return "0.000000";

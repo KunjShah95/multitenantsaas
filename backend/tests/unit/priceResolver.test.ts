@@ -24,7 +24,12 @@ describe("priceResolver integration", () => {
     // This test validates the sorting logic without DB: simulate candidate lists
     const lists = [
       { customerTierId: null, priority: 0, effectiveFrom: null, id: "generic" },
-      { customerTierId: "gold-tier-id", priority: 100, effectiveFrom: "2026-01-01T00:00:00Z", id: "gold" },
+      {
+        customerTierId: "gold-tier-id",
+        priority: 100,
+        effectiveFrom: "2026-01-01T00:00:00Z",
+        id: "gold",
+      },
     ] as any[];
     const tierId = "gold-tier-id";
     // sorting should put gold first

@@ -18,7 +18,11 @@ describe("billing schedule", () => {
   });
 
   it("computes monthly period containing reference", () => {
-    const period = computeBillingPeriod("2026-01-15", "monthly", new Date("2026-01-20T12:00:00.000Z"));
+    const period = computeBillingPeriod(
+      "2026-01-15",
+      "monthly",
+      new Date("2026-01-20T12:00:00.000Z"),
+    );
     expect(formatDateOnly(period.periodStart)).toBe("2026-01-15");
     expect(formatDateOnly(period.periodEnd)).toBe("2026-02-15");
     expect(period.nextBillAt.toISOString()).toBe(period.periodEnd.toISOString());
@@ -90,7 +94,13 @@ describe("proration", () => {
   });
 
   it("credits remaining period on cancel (credit_remaining)", () => {
-    const credit = computeCancellationCredit(terms, "credit_remaining", periodStart, periodEnd, mid);
+    const credit = computeCancellationCredit(
+      terms,
+      "credit_remaining",
+      periodStart,
+      periodEnd,
+      mid,
+    );
     expect(credit.direction).toBe("credit");
     expect(Number(credit.creditTotal)).toBeGreaterThan(0);
   });

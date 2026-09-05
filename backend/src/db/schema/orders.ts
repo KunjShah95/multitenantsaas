@@ -1,4 +1,16 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, integer, index, uniqueIndex, check, jsonb } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  integer,
+  index,
+  uniqueIndex,
+  check,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { customers } from "./customers.js";
@@ -17,7 +29,9 @@ export const orders = pgTable(
     quoteId: uuid("quote_id")
       .notNull()
       .references(() => quotes.id, { onDelete: "restrict" }),
-    quoteVersionId: uuid("quote_version_id").references(() => quoteVersions.id, { onDelete: "set null" }),
+    quoteVersionId: uuid("quote_version_id").references(() => quoteVersions.id, {
+      onDelete: "set null",
+    }),
     quoteVersionNumber: integer("quote_version_number").notNull(),
     customerId: uuid("customer_id")
       .notNull()
@@ -38,7 +52,11 @@ export const orders = pgTable(
   },
   (t) => [
     uniqueIndex("orders_tenant_number_unique").on(t.tenantId, t.number),
-    uniqueIndex("orders_tenant_quote_version_unique").on(t.tenantId, t.quoteId, t.quoteVersionNumber),
+    uniqueIndex("orders_tenant_quote_version_unique").on(
+      t.tenantId,
+      t.quoteId,
+      t.quoteVersionNumber,
+    ),
     index("orders_tenant_idx").on(t.tenantId),
     index("orders_tenant_status_updated_idx").on(t.tenantId, t.status, t.updatedAt),
     index("orders_tenant_customer_idx").on(t.tenantId, t.customerId),

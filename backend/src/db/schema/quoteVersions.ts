@@ -1,4 +1,13 @@
-import { pgTable, uuid, timestamp, integer, jsonb, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  timestamp,
+  integer,
+  jsonb,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { quotes } from "./quotes.js";

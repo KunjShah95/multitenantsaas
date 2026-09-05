@@ -1,4 +1,12 @@
-import { pgTable, uuid, timestamp, numeric, boolean, index, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  timestamp,
+  numeric,
+  boolean,
+  index,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { organizations } from "./organizations.js";
 import { products } from "./products.js";
 
@@ -23,7 +31,11 @@ export const upsellRules = pgTable(
     archivedAt: timestamp("archived_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("upsell_rules_tenant_trigger_suggested_unique").on(t.tenantId, t.triggerProductId, t.suggestedProductId),
+    uniqueIndex("upsell_rules_tenant_trigger_suggested_unique").on(
+      t.tenantId,
+      t.triggerProductId,
+      t.suggestedProductId,
+    ),
     index("upsell_rules_tenant_idx").on(t.tenantId),
     index("upsell_rules_trigger_idx").on(t.triggerProductId),
   ],

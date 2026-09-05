@@ -9,3 +9,5 @@ plans
 Problem Statement
 ARCHITECTURE.md
 package-lock.json
+*.sql
+src/db/migrations/

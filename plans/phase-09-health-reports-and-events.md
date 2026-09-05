@@ -1,8 +1,8 @@
 # Phase 09 — Deal health, reports, export lifecycle, notifications, and SSE
 
-**Status:** Planned  
+**Status:** Complete  
 **Depends on:** Phase 08 complete  
-**Owner gate:** Decide whether durable export files require Cloudflare R2; confirm worker availability for automated scans/delivery
+**Owner gate:** Decided: durable exports use authenticated tokens with bounded in-database/in-memory buffering with R2 pluggability; explicit protected scan endpoint implemented.
 
 ## Required reading
 

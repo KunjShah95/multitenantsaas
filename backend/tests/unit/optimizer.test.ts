@@ -61,9 +61,7 @@ describe("Fulfillment Optimizer (Pure)", () => {
   });
 
   it("splits across warehouses when no single warehouse has complete stock", () => {
-    const items = [
-      { orderLineId: "line-1", productId: "prod-1", sku: "SKU-A", requestedQty: 10 },
-    ];
+    const items = [{ orderLineId: "line-1", productId: "prod-1", sku: "SKU-A", requestedQty: 10 }];
 
     const balances = [
       // Neither has 10, but combined they have 6 + 6 = 12
@@ -81,9 +79,7 @@ describe("Fulfillment Optimizer (Pure)", () => {
   });
 
   it("correctly identifies backorders when stock is insufficient across all warehouses", () => {
-    const items = [
-      { orderLineId: "line-1", productId: "prod-1", sku: "SKU-A", requestedQty: 20 },
-    ];
+    const items = [{ orderLineId: "line-1", productId: "prod-1", sku: "SKU-A", requestedQty: 20 }];
 
     const balances = [
       { warehouseId: "wh-a", sku: "SKU-A", onHandQty: 5, reservedQty: 0 },

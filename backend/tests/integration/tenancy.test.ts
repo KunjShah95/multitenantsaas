@@ -7,11 +7,7 @@ import { withTenantTransaction } from "../../src/db/transaction.js";
 import * as schema from "../../src/db/schema/index.js";
 import { writeAuditEvent } from "../../src/shared/audit.js";
 import { storeIdempotency, findIdempotency } from "../../src/shared/idempotency.js";
-import {
-  getRuntimeDb,
-  closeRuntimeDb,
-  withRuntimeTenantTransaction,
-} from "./helpers.js";
+import { getRuntimeDb, closeRuntimeDb, withRuntimeTenantTransaction } from "./helpers.js";
 
 dotenv.config();
 
@@ -26,7 +22,10 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
 
   beforeAll(async () => {
     const db = getDb();
-    const orgs = await db.select().from(schema.organizations).where(eq(schema.organizations.slug, TENANT_A_SLUG));
+    const orgs = await db
+      .select()
+      .from(schema.organizations)
+      .where(eq(schema.organizations.slug, TENANT_A_SLUG));
     if (orgs.length === 0) {
       const [o] = await db
         .insert(schema.organizations)
@@ -35,7 +34,10 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
       tenantAId = o!.id;
     } else tenantAId = orgs[0]!.id;
 
-    const orgsB = await db.select().from(schema.organizations).where(eq(schema.organizations.slug, TENANT_B_SLUG));
+    const orgsB = await db
+      .select()
+      .from(schema.organizations)
+      .where(eq(schema.organizations.slug, TENANT_B_SLUG));
     if (orgsB.length === 0) {
       const [o] = await db
         .insert(schema.organizations)
@@ -44,34 +46,48 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
       tenantBId = o!.id;
     } else tenantBId = orgsB[0]!.id;
 
-    const uA = await db.select().from(schema.users).where(eq(schema.users.email, "tenant-a-user@test.local"));
+    const uA = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.email, "tenant-a-user@test.local"));
     if (uA.length === 0) {
-      const [u] = await db.insert(schema.users).values({ email: "tenant-a-user@test.local", name: "Tenant A User" }).returning();
+      const [u] = await db
+        .insert(schema.users)
+        .values({ email: "tenant-a-user@test.local", name: "Tenant A User" })
+        .returning();
       userAId = u!.id;
     } else userAId = uA[0]!.id;
 
-    const uB = await db.select().from(schema.users).where(eq(schema.users.email, "tenant-b-user@test.local"));
+    const uB = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.email, "tenant-b-user@test.local"));
     if (uB.length === 0) {
-      const [u] = await db.insert(schema.users).values({ email: "tenant-b-user@test.local", name: "Tenant B User" }).returning();
+      const [u] = await db
+        .insert(schema.users)
+        .values({ email: "tenant-b-user@test.local", name: "Tenant B User" })
+        .returning();
       userBId = u!.id;
     } else userBId = uB[0]!.id;
 
     const rawPool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 1 });
-    await rawPool.query(`INSERT INTO memberships (tenant_id, user_id, role) VALUES ($1,$2,'admin') ON CONFLICT (tenant_id, user_id) DO NOTHING`, [
-      tenantAId,
-      userAId,
-    ]);
-    await rawPool.query(`INSERT INTO memberships (tenant_id, user_id, role) VALUES ($1,$2,'admin') ON CONFLICT (tenant_id, user_id) DO NOTHING`, [
-      tenantBId,
-      userBId,
-    ]);
+    await rawPool.query(
+      `INSERT INTO memberships (tenant_id, user_id, role) VALUES ($1,$2,'admin') ON CONFLICT (tenant_id, user_id) DO NOTHING`,
+      [tenantAId, userAId],
+    );
+    await rawPool.query(
+      `INSERT INTO memberships (tenant_id, user_id, role) VALUES ($1,$2,'admin') ON CONFLICT (tenant_id, user_id) DO NOTHING`,
+      [tenantBId, userBId],
+    );
     await rawPool.end();
 
     // Ensure each tenant has a customer — use runtime transaction so RLS enforced correctly
     await withRuntimeTenantTransaction({ tenantId: tenantAId }, async (tx: any) => {
       const existing = await tx.select().from(schema.customers).limit(1);
       if (existing.length === 0) {
-        await tx.insert(schema.customers).values({ tenantId: tenantAId, name: `Customer-A-${Date.now()}` });
+        await tx
+          .insert(schema.customers)
+          .values({ tenantId: tenantAId, name: `Customer-A-${Date.now()}` });
       }
       try {
         await tx.insert(schema.customers).values({ tenantId: tenantAId, name: "Probe Customer A" });
@@ -81,7 +97,9 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
     await withRuntimeTenantTransaction({ tenantId: tenantBId }, async (tx: any) => {
       const existing = await tx.select().from(schema.customers).limit(1);
       if (existing.length === 0) {
-        await tx.insert(schema.customers).values({ tenantId: tenantBId, name: `Customer-B-${Date.now()}` });
+        await tx
+          .insert(schema.customers)
+          .values({ tenantId: tenantBId, name: `Customer-B-${Date.now()}` });
       }
       try {
         await tx.insert(schema.customers).values({ tenantId: tenantBId, name: "Probe Customer B" });
@@ -103,16 +121,25 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
   });
 
   it("cross-tenant data is blocked by RLS (tenant A cannot see tenant B's customer)", async () => {
-    const bCustomers = await withRuntimeTenantTransaction({ tenantId: tenantBId }, async (tx: any) => {
-      return tx.select().from(schema.customers);
-    });
+    const bCustomers = await withRuntimeTenantTransaction(
+      { tenantId: tenantBId },
+      async (tx: any) => {
+        return tx.select().from(schema.customers);
+      },
+    );
     expect(bCustomers.length).toBeGreaterThan(0);
     const bCustomerId = bCustomers[0]!.id;
 
-    const aViewOfB = await withRuntimeTenantTransaction({ tenantId: tenantAId }, async (tx: any) => {
-      const rows = await tx.select().from(schema.customers).where(eq(schema.customers.id, bCustomerId));
-      return rows;
-    });
+    const aViewOfB = await withRuntimeTenantTransaction(
+      { tenantId: tenantAId },
+      async (tx: any) => {
+        const rows = await tx
+          .select()
+          .from(schema.customers)
+          .where(eq(schema.customers.id, bCustomerId));
+        return rows;
+      },
+    );
     expect(aViewOfB.length).toBe(0);
 
     await expect(
@@ -130,18 +157,24 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
 
   it("missing tenant context fails", async () => {
     // @ts-expect-error testing missing tenant
-    await expect(withTenantTransaction({} as unknown as { tenantId: string }, async (tx) => tx.select().from(schema.customers))).rejects.toThrow(
-      /requires tenantId/,
-    );
+    await expect(
+      withTenantTransaction({} as unknown as { tenantId: string }, async (tx) =>
+        tx.select().from(schema.customers),
+      ),
+    ).rejects.toThrow(/requires tenantId/);
     // @ts-expect-error empty string
     await expect(withTenantTransaction({ tenantId: "" }, async () => {})).rejects.toThrow();
-    await expect(withRuntimeTenantTransaction({ tenantId: "" } as any, async () => {})).rejects.toThrow();
+    await expect(
+      withRuntimeTenantTransaction({ tenantId: "" } as any, async () => {}),
+    ).rejects.toThrow();
   });
 
   it("check constraint works (invalid role)", async () => {
     await expect(
       withRuntimeTenantTransaction({ tenantId: tenantAId }, async (tx: any) => {
-        await tx.insert(schema.memberships).values({ tenantId: tenantAId, userId: userAId, role: "superadmin" });
+        await tx
+          .insert(schema.memberships)
+          .values({ tenantId: tenantAId, userId: userAId, role: "superadmin" });
       }),
     ).rejects.toThrow();
   });
@@ -175,7 +208,12 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
         responseStatus: "200",
         responseBody: { ok: true },
       });
-      const found = await findIdempotency(tx, { tenantId: tenantAId, actorId: userAId, operation: op, key });
+      const found = await findIdempotency(tx, {
+        tenantId: tenantAId,
+        actorId: userAId,
+        operation: op,
+        key,
+      });
       expect(found).toBeDefined();
       expect(found!.key).toBe(key);
     });
@@ -201,7 +239,9 @@ describe("Phase 01 — Neon tenancy, RLS, constraints, audit, idempotency", () =
 
   it("migration works and RLS is forced", async () => {
     const pool = new Pool({ connectionString: process.env.DATABASE_URL_UNPOOLED!, max: 1 });
-    const r = await pool.query(`SELECT relname, relrowsecurity, relforcerowsecurity FROM pg_class WHERE relname='customers'`);
+    const r = await pool.query(
+      `SELECT relname, relrowsecurity, relforcerowsecurity FROM pg_class WHERE relname='customers'`,
+    );
     expect(r.rows[0].relrowsecurity).toBe(true);
     expect(r.rows[0].relforcerowsecurity).toBe(true);
     await pool.end();

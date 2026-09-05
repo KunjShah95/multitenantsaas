@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  integer,
+  jsonb,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { quotes } from "./quotes.js";
@@ -29,14 +39,27 @@ export const quoteApprovals = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    uniqueIndex("quote_approvals_quote_version_seq_unique").on(t.quoteId, t.versionNumber, t.sequence),
+    uniqueIndex("quote_approvals_quote_version_seq_unique").on(
+      t.quoteId,
+      t.versionNumber,
+      t.sequence,
+    ),
     index("quote_approvals_tenant_idx").on(t.tenantId),
     index("quote_approvals_quote_idx").on(t.quoteId),
     index("quote_approvals_quote_version_idx").on(t.quoteId, t.versionNumber),
     index("quote_approvals_pending_idx").on(t.status),
     check("quote_approvals_sequence_check", sql`${t.sequence} >= 1`),
-    check("quote_approvals_role_check", sql`${t.role} IN ('manager','finance','admin','ops','rep')`),
-    check("quote_approvals_status_check", sql`${t.status} IN ('pending','approved','rejected','returned','invalidated','auto_approved')`),
-    check("quote_approvals_decision_check", sql`${t.decision} IS NULL OR ${t.decision} IN ('approve','reject','returnForRevision','invalidated')`),
+    check(
+      "quote_approvals_role_check",
+      sql`${t.role} IN ('manager','finance','admin','ops','rep')`,
+    ),
+    check(
+      "quote_approvals_status_check",
+      sql`${t.status} IN ('pending','approved','rejected','returned','invalidated','auto_approved')`,
+    ),
+    check(
+      "quote_approvals_decision_check",
+      sql`${t.decision} IS NULL OR ${t.decision} IN ('approve','reject','returnForRevision','invalidated')`,
+    ),
   ],
 );
