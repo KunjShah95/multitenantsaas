@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+data.db
+data.json
+.agents
+docs
+plans
+Problem Statement
+ARCHITECTURE.md
+package-lock.json
