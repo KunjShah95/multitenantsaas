@@ -43,6 +43,13 @@
       "when": 1788590833507,
       "tag": "0005_enable_rls_phase3",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788592245718,
+      "tag": "0006_careful_stature",
+      "breakpoints": true
     }
   ]
 }

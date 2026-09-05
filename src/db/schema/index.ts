@@ -22,3 +22,6 @@ export * from "./warehouses.js";
 export * from "./inventoryBalances.js";
 export * from "./subscriptionPlans.js";
 export * from "./upsellRules.js";
+export * from "./quotes.js";
+export * from "./quoteLines.js";
+export * from "./quoteVersions.js";

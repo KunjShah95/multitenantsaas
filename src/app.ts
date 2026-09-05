@@ -11,6 +11,7 @@ import { getEnv } from "./config/env.js";
 import { authRouter, portalRouter, meRouter } from "./api/v1/auth.routes.js";
 import { configRouter } from "./api/v1/config.routes.js";
 import { governanceRouter } from "./api/v1/governance.routes.js";
+import { quotesRouter } from "./api/v1/quotes.routes.js";
 
 export function createApp() {
   const env = getEnv();
@@ -62,6 +63,9 @@ export function createApp() {
   // v1 API — Phase 03 catalog/governance (tenant-scoped configuration)
   app.use("/api/v1", configRouter);
   app.use("/api/v1", governanceRouter);
+
+  // v1 API — Phase 04 quotes (tenant-scoped, revision-protected)
+  app.use("/api/v1", quotesRouter);
 
   // 404 for unknown routes — single error envelope
   app.use(notFoundHandler);
