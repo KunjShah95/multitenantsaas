@@ -1,6 +1,6 @@
-# DealFlow360 — Multi-tenant SaaS (Phase 00 foundation)
+# DealFlow360 — Multi-tenant SaaS (Phase 02 complete → Phase 03 ready)
 
-> **Current phase:** 00 — Owner setup and engineering foundation. Legacy JS proof-of-concept remains in `index.js`/`modules/*`; new TypeScript foundation lives in `src/`.
+> **Current phase:** 02 complete — Neon + Auth foundation live on `src/`. Legacy JS prototype (`index.js`/`modules/*`/`utils/*`/`services/*`/`verify*.js`/`data.*`) removed 2026-09-05 before Phase 03. All runtime paths now use TypeScript + Neon PostgreSQL.
 
 ## Documentation
 
@@ -20,37 +20,33 @@
 
 2. **Local bootstrap:**
 
-   ```sh
-   cp .env.example .env   # fill pooled/direct URLs and generated secrets
-   npm install
-   npm run typecheck
-   npm run lint
-   npm run test:unit
-   npm run test:contract
-   npm run dev:ts         # TypeScript foundation (src/index.ts → :4000)
-   # or legacy demo (still works):
-   npm run dev            # nodemon index.js → :4000
-   npm run verifyAll      # 8-step legacy Login→Payment demo against live server
-   ```
+    ```sh
+    cp .env.example .env   # fill pooled/direct URLs and generated secrets
+    npm install
+    npm run typecheck
+    npm run lint
+    npm run test:unit
+    npm run test:contract
+    npm run dev            # TypeScript foundation (src/index.ts → :4000)
+    ```
 
-## Scripts (available after Phase 00)
+## Scripts (available after Phase 02)
 
 | Script | Purpose |
 |---|---|
-| `npm run dev:ts` | Watch-run TypeScript foundation (`tsx watch src/index.ts`) |
-| `npm start` / `npm run dev` | Legacy JS demo server (`index.js`) — preserved until Phase 1 |
+| `npm run dev` | Watch-run TypeScript foundation (`tsx watch src/index.ts`) |
+| `npm start` | Run TypeScript foundation (`tsx src/index.ts`) |
 | `npm run build` | Compile `src/` → `dist/` via `tsc` |
 | `npm run typecheck` | `tsc --noEmit` strict check |
 | `npm run lint` / `lint:fix` | ESLint (flat config, typescript-eslint) |
 | `npm run format` / `format:fix` | Prettier check/write |
 | `npm run test` / `test:unit` / `test:contract` | Vitest + Supertest (unit & contract) |
-| `npm run verifyAll` | Legacy end-to-end demo (requires running server) |
+| `npm run db:migrate` / `db:seed` | Apply migrations / idempotent demo seed (Neon) |
 
 ## Probes
 
 - `GET /healthz` — liveness, always `200 { status:"ok" }`
-- `GET /readyz` — readiness, Phase 0 returns `200` with `{ database: deferred }` until Neon integration (Phase 1 adds real pool check)
-- `GET /health` — legacy alias kept for `verify.js`
+- `GET /readyz` — readiness, checks Neon pool when `DATABASE_URL` is set
 
 All errors use one envelope: `{ error: { code, message, details?, requestId } }` and `x-request-id` is echoed/set on every response. See `docs/03-backend-architecture.md` and `src/shared/errors.ts:1`.
 
@@ -58,9 +54,8 @@ All errors use one envelope: `{ error: { code, message, details?, requestId } }`
 
 Template at `.env.example` (tracked) with safe placeholders; real `.env` is git-ignored. Validation in `src/config/env.ts:1` (Zod) fails closed in `NODE_ENV=production` and tolerates missing `DATABASE_URL` in development until Phase 1 — so `npm run dev:ts` starts without a DB.
 
-## What Phase 00 does NOT do
+## What Phase 02 completed
 
-- No PostgreSQL schema, RLS, or migration (Phase 1)
-- No workflow/endpoint/auth behavior changes
-- No email/R2/payment/queue packages
-- No wholesale rewrite of `utils/db.js`, `data.db`, `data.json`, or legacy routes
+- Neon PostgreSQL with Drizzle migrations, RLS-ready tenant isolation, audit/outbox/idempotency (`src/db/*`)
+- Secure auth: Argon2id, JWT access + opaque refresh rotation, sessions, invitations, portal magic-link, RBAC middleware (`src/auth/*`, `src/api/v1/auth*`)
+- Legacy prototype fully removed — no `utils/db.js`, `data.db`, or alternative persistence remains

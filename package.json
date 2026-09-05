@@ -5,12 +5,10 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "dev:ts": "tsx watch src/index.ts",
-    "start:ts": "tsx src/index.ts",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -24,10 +22,7 @@
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:seed": "tsx src/db/seed.ts",
-    "verify": "node verify.js",
-    "verify2": "node verify2.js",
-    "verifyAll": "node verify.js && node verify2.js"
+    "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "argon2": "^0.45.1",
@@ -40,7 +35,6 @@
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
-    "nodemon": "^3.1.14",
     "pg": "^8.23.0",
     "pino": "^9.14.0",
     "pino-http": "^10.5.0",

@@ -11,12 +11,10 @@ node_modules/
 *.pem
 *.key
 
-# Local / legacy persistence (Phase 1 moves to Neon; not deleted in Phase 0)
-# Tracked legacy files remain in git until Phase 1 removes them; new local copies ignored
-data.db
-data.db-journal
+# Local persistence — Neon is authoritative (legacy data.db/data.json removed 2026-09-05)
 *.sqlite
 *.sqlite3
+data.db-journal
 
 # Build / coverage output
 dist/
