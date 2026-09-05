@@ -9,6 +9,8 @@ import { errorMiddleware, notFoundHandler } from "./shared/errors.js";
 import { mountHealthRoutes } from "./app/health.js";
 import { getEnv } from "./config/env.js";
 import { authRouter, portalRouter, meRouter } from "./api/v1/auth.routes.js";
+import { configRouter } from "./api/v1/config.routes.js";
+import { governanceRouter } from "./api/v1/governance.routes.js";
 
 export function createApp() {
   const env = getEnv();
@@ -56,6 +58,10 @@ export function createApp() {
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/portal/auth", portalRouter);
   app.use("/api/v1/me", meRouter);
+
+  // v1 API — Phase 03 catalog/governance (tenant-scoped configuration)
+  app.use("/api/v1", configRouter);
+  app.use("/api/v1", governanceRouter);
 
   // 404 for unknown routes — single error envelope
   app.use(notFoundHandler);

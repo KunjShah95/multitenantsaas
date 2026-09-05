@@ -29,6 +29,20 @@
       "when": 1788588568939,
       "tag": "0003_portal_magic_links",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788590833506,
+      "tag": "0004_real_doctor_strange",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788590833507,
+      "tag": "0005_enable_rls_phase3",
+      "breakpoints": true
     }
   ]
 }

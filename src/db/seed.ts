@@ -89,6 +89,108 @@ async function seed() {
     );
   }
 
+  console.log("[seed] upserting Phase 3 demo config (tiers, categories, products, variants, warehouses)...");
+  for (const org of orgs) {
+    // Tiers
+    for (const tier of [
+      { code: "Bronze", name: "Bronze", priority: 0 },
+      { code: "Silver", name: "Silver", priority: 10 },
+      { code: "Gold", name: "Gold", priority: 20 },
+    ]) {
+      await pool.query(
+        `INSERT INTO customer_tiers (tenant_id, code, name, priority) VALUES ($1,$2,$3,$4)
+         ON CONFLICT (tenant_id, code) DO UPDATE SET name = EXCLUDED.name`,
+        [org.id, tier.code, tier.name, tier.priority],
+      );
+    }
+    // Categories
+    for (const cat of [
+      { code: "Hardware", name: "Hardware" },
+      { code: "Services", name: "Services" },
+    ]) {
+      await pool.query(
+        `INSERT INTO product_categories (tenant_id, code, name) VALUES ($1,$2,$3)
+         ON CONFLICT (tenant_id, code) DO UPDATE SET name = EXCLUDED.name`,
+        [org.id, cat.code, cat.name],
+      );
+    }
+  }
+  // Need category ids for products
+  const allCategories = await db.select().from(schema.productCategories);
+  const catByTenantCode = new Map(allCategories.map((c) => [`${c.tenantId}:${c.code}`, c]));
+  const allTiers = await db.select().from(schema.customerTiers);
+
+  for (const org of orgs) {
+    const hw = catByTenantCode.get(`${org.id}:Hardware`);
+    const svc = catByTenantCode.get(`${org.id}:Services`);
+    // Products
+    for (const prod of [
+      { sku: "LAP-PRO-15", name: "Laptop Pro 15", categoryId: hw?.id ?? null, unit: "ea", price: "1200.000000", cost: "800.000000", tax: "18.00" },
+      { sku: "SETUP-SVC", name: "Setup Service", categoryId: svc?.id ?? null, unit: "lot", price: "500.000000", cost: "300.000000", tax: "10.00" },
+      { sku: "SUP-STD", name: "Support Standard", categoryId: svc?.id ?? null, unit: "ea", price: "100.000000", cost: "40.000000", tax: "18.00" },
+    ]) {
+      await pool.query(
+        `INSERT INTO products (tenant_id, category_id, sku, name, unit, standard_price, standard_cost, tax_rate_pct)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+         ON CONFLICT (tenant_id, sku) DO UPDATE SET name = EXCLUDED.name, standard_price = EXCLUDED.standard_price`,
+        [org.id, prod.categoryId, prod.sku, prod.name, prod.unit, prod.price, prod.cost, prod.tax],
+      );
+    }
+  }
+  const allProducts = await db.select().from(schema.products);
+  const prodByTenantSku = new Map(allProducts.map((p) => [`${p.tenantId}:${p.sku}`, p]));
+  for (const org of orgs) {
+    const laptop = prodByTenantSku.get(`${org.id}:LAP-PRO-15`);
+    if (laptop) {
+      for (const v of [
+        { sku: null, attribute: "RAM", value: "8GB", extraPrice: "0.000000" },
+        { sku: null, attribute: "RAM", value: "16GB", extraPrice: "150.000000" },
+      ]) {
+        // Check existence by product_id + attribute/value
+        const existing = await pool.query(`SELECT id FROM product_variants WHERE tenant_id=$1 AND product_id=$2 AND attribute=$3 AND value=$4`, [org.id, laptop.id, v.attribute, v.value]);
+        if (existing.rows.length === 0) {
+          await pool.query(`INSERT INTO product_variants (tenant_id, product_id, attribute, value, extra_price) VALUES ($1,$2,$3,$4,$5)`, [org.id, laptop.id, v.attribute, v.value, v.extraPrice]);
+        }
+      }
+    }
+    // Warehouses
+    for (const wh of [
+      { code: "WH-001", name: "Main Warehouse", location: "US-East", weight: "1.0000" },
+      { code: "WH-002", name: "Secondary Warehouse", location: "US-West", weight: "1.5000" },
+    ]) {
+      await pool.query(
+        `INSERT INTO warehouses (tenant_id, code, name, location, shipping_cost_weight) VALUES ($1,$2,$3,$4,$5)
+         ON CONFLICT (tenant_id, code) DO UPDATE SET name = EXCLUDED.name`,
+        [org.id, wh.code, wh.name, wh.location, wh.weight],
+      );
+    }
+  }
+  const allWarehouses = await db.select().from(schema.warehouses);
+  for (const org of orgs) {
+    const wh = allWarehouses.find((w) => w.tenantId === org.id && w.code === "WH-001");
+    const laptop = prodByTenantSku.get(`${org.id}:LAP-PRO-15`);
+    if (wh && laptop) {
+      await pool.query(
+        `INSERT INTO inventory_balances (tenant_id, warehouse_id, sku, on_hand_qty) VALUES ($1,$2,$3,$4)
+         ON CONFLICT (tenant_id, warehouse_id, sku) DO UPDATE SET on_hand_qty = EXCLUDED.on_hand_qty`,
+        [org.id, wh.id, laptop.sku, "100.000000"],
+      );
+    }
+  }
+  // Plans and upsell for demo
+  for (const org of orgs) {
+    for (const plan of [
+      { code: "basic-monthly", name: "Basic Monthly", interval: "monthly", price: "99.000000", currency: "USD" },
+      { code: "pro-yearly", name: "Pro Yearly", interval: "yearly", price: "999.000000", currency: "USD" },
+    ]) {
+      await pool.query(
+        `INSERT INTO subscription_plans (tenant_id, code, name, billing_interval, price, currency) VALUES ($1,$2,$3,$4,$5,$6)
+         ON CONFLICT (tenant_id, code) DO UPDATE SET name = EXCLUDED.name`,
+        [org.id, plan.code, plan.name, plan.interval, plan.price, plan.currency],
+      );
+    }
+  }
+
   // Verify idempotency: second run should not error and counts stable
   console.log("[seed] done — tenants:", TENANTS.length, "users:", USERS.length, "customers:", CUSTOMERS.length);
   await pool.end();
