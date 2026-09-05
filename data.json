@@ -1,0 +1,2387 @@
+{
+  "_seq": 92,
+  "users": [
+    {
+      "id": "u_19t9b",
+      "email": "admin@dealflow.io",
+      "pass": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+      "role": "admin",
+      "name": "Admin",
+      "teamId": "team_alpha",
+      "createdAt": "2026-09-05T04:12:25.823Z"
+    },
+    {
+      "id": "u_29t9b",
+      "email": "rep@dealflow.io",
+      "pass": "9c410f599d2b705887a40ba8d3b769dda7721929e5a9ef6999c409bc6125fda2",
+      "role": "rep",
+      "name": "Rita Rep",
+      "teamId": "team_alpha",
+      "createdAt": "2026-09-05T04:12:25.823Z"
+    },
+    {
+      "id": "u_39t9b",
+      "email": "rep2@dealflow.io",
+      "pass": "9c410f599d2b705887a40ba8d3b769dda7721929e5a9ef6999c409bc6125fda2",
+      "role": "rep",
+      "name": "Raj Rep",
+      "teamId": "team_beta",
+      "createdAt": "2026-09-05T04:12:25.823Z"
+    },
+    {
+      "id": "u_49t9b",
+      "email": "manager@dealflow.io",
+      "pass": "49a0ac18e26df0b0724f5ac5837e436b336527485fc0a388f578913d6ee70e67",
+      "role": "manager",
+      "name": "Mona Manager",
+      "teamId": "team_alpha",
+      "createdAt": "2026-09-05T04:12:25.823Z"
+    },
+    {
+      "id": "u_59t9b",
+      "email": "finance@dealflow.io",
+      "pass": "7c3d4b31e62ecad4f49c5800d42fcc648656a9e2b7dce47b1e63b35c2681bda8",
+      "role": "finance",
+      "name": "Finn Finance",
+      "teamId": "team_alpha",
+      "createdAt": "2026-09-05T04:12:25.823Z"
+    },
+    {
+      "id": "u_69t9b",
+      "email": "ops@dealflow.io",
+      "pass": "362e4f232c0f2fb110ac652338b3f20d2b99db1e7c012b7eb3382f27a3086251",
+      "role": "ops",
+      "name": "Omar Ops",
+      "teamId": "team_alpha",
+      "createdAt": "2026-09-05T04:12:25.823Z"
+    }
+  ],
+  "teams": [
+    {
+      "id": "team_alpha",
+      "name": "Alpha",
+      "memberIds": [
+        "u_19t9b",
+        "u_29t9b",
+        "u_49t9b",
+        "u_59t9b",
+        "u_69t9b"
+      ],
+      "createdAt": "2026-09-05T04:12:25.822Z"
+    },
+    {
+      "id": "team_beta",
+      "name": "Beta",
+      "memberIds": [
+        "u_39t9b"
+      ],
+      "createdAt": "2026-09-05T04:12:25.822Z"
+    }
+  ],
+  "customers": [
+    {
+      "id": "c_16a8up",
+      "email": "new@buyer.io",
+      "pass": "fb72a905a57f81e8358e432b7c699ff6987200697366167e4ba962953b072868",
+      "name": "NewCo",
+      "tier": "Silver",
+      "currency": "EUR",
+      "createdAt": "2026-09-05T04:12:46.033Z"
+    },
+    {
+      "id": "c_79t9b",
+      "email": "buyer@acme.com",
+      "pass": "4f21b18a4c743a5da01bb3a4955dea0a0294a0b4f7977b454c7259e37b2e6c19",
+      "name": "Acme Corp",
+      "tier": "Gold",
+      "currency": "USD",
+      "createdAt": "2026-09-05T04:12:25.823Z"
+    },
+    {
+      "id": "c_2ic3g9",
+      "email": "newmtnvc3g7@buyer.io",
+      "pass": "fb72a905a57f81e8358e432b7c699ff6987200697366167e4ba962953b072868",
+      "name": "NewCo",
+      "tier": "Silver",
+      "currency": "EUR",
+      "createdAt": "2026-09-05T04:14:12.345Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "p_laptop",
+      "name": "Laptop Pro 15",
+      "category": "Hardware",
+      "price": 1200,
+      "unitCost": 800,
+      "unit": "ea",
+      "tax": 18,
+      "variants": [
+        {
+          "id": "v_8gb",
+          "attribute": "RAM",
+          "value": "8GB",
+          "extraPrice": 0
+        },
+        {
+          "id": "v_16gb",
+          "attribute": "RAM",
+          "value": "16GB",
+          "extraPrice": 150
+        },
+        {
+          "id": "v_ua3xe",
+          "attribute": "RAM",
+          "value": "32GB",
+          "extraPrice": 300
+        },
+        {
+          "id": "v_1ubjn7",
+          "attribute": "RAM",
+          "value": "32GB",
+          "extraPrice": 300
+        },
+        {
+          "id": "v_26bvtr",
+          "attribute": "RAM",
+          "value": "32GB",
+          "extraPrice": 300
+        }
+      ]
+    },
+    {
+      "id": "p_mouse",
+      "name": "Wireless Mouse",
+      "category": "Hardware",
+      "price": 40,
+      "unitCost": 15,
+      "unit": "ea",
+      "tax": 18,
+      "variants": [
+        {
+          "id": "v_pack3",
+          "attribute": "Pack",
+          "value": "Pack of 3",
+          "extraPrice": 70
+        }
+      ]
+    },
+    {
+      "id": "p_setup",
+      "name": "Setup Service",
+      "category": "Services",
+      "price": 500,
+      "unitCost": 400,
+      "unit": "lot",
+      "tax": 18,
+      "variants": []
+    },
+    {
+      "id": "p_support",
+      "name": "Support Plan",
+      "category": "Subscriptions",
+      "price": 99,
+      "unitCost": 20,
+      "unit": "mo",
+      "tax": 18,
+      "variants": []
+    }
+  ],
+  "priceLists": [
+    {
+      "id": "pl1",
+      "name": "Gold USD",
+      "tier": "Gold",
+      "currency": "USD",
+      "rules": [
+        {
+          "productId": "p_laptop",
+          "price": 1150
+        }
+      ]
+    },
+    {
+      "id": "pl2",
+      "name": "Gold EUR",
+      "tier": "Gold",
+      "currency": "EUR",
+      "rules": [
+        {
+          "productId": "p_laptop",
+          "price": 1050
+        }
+      ]
+    }
+  ],
+  "currencies": [
+    {
+      "code": "EUR",
+      "rateToUSD": 1.08
+    }
+  ],
+  "tierCeilings": [
+    {
+      "tier": "Bronze",
+      "ceiling": 5
+    },
+    {
+      "tier": "Gold",
+      "ceiling": 15
+    },
+    {
+      "tier": "Silver",
+      "ceiling": 10
+    }
+  ],
+  "categoryCeilings": [
+    {
+      "category": "Hardware",
+      "ceiling": 15
+    },
+    {
+      "category": "Services",
+      "ceiling": 10
+    },
+    {
+      "category": "Subscriptions",
+      "ceiling": 20
+    }
+  ],
+  "approvalChains": [
+    {
+      "id": "a1",
+      "name": "Default",
+      "managerUpTo": 5,
+      "note": "score 0-5 manager, >5 manager+finance",
+      "enabled": true
+    },
+    {
+      "id": "a_1wbll7",
+      "name": "Strict",
+      "managerUpTo": 2,
+      "note": "",
+      "enabled": true
+    }
+  ],
+  "warehouses": [
+    {
+      "id": "w_east",
+      "name": "East Depot",
+      "shippingCostWeight": 2,
+      "stock": {
+        "p_laptop": 3,
+        "p_mouse": 20
+      },
+      "replenishment": "biweekly"
+    },
+    {
+      "id": "w_main",
+      "name": "Main Warehouse",
+      "shippingCostWeight": 1,
+      "stock": {
+        "p_laptop": 6,
+        "p_mouse": 96,
+        "p_setup": 9997,
+        "p_support": 9989
+      },
+      "replenishment": "weekly"
+    }
+  ],
+  "plans": [
+    {
+      "id": "plan_m",
+      "name": "Monthly",
+      "cycle": "monthly",
+      "proration": "daily",
+      "refund": "pro-rata"
+    },
+    {
+      "id": "plan_y",
+      "name": "Yearly",
+      "cycle": "yearly",
+      "proration": "daily",
+      "refund": "pro-rata"
+    }
+  ],
+  "upsellRules": [
+    {
+      "id": "u1",
+      "triggerProductId": "p_laptop",
+      "suggestedProductId": "p_mouse",
+      "weight": 4,
+      "promoted": true,
+      "minMarginPct": 20
+    },
+    {
+      "id": "u2",
+      "triggerProductId": "p_laptop",
+      "suggestedProductId": "p_support",
+      "weight": 3,
+      "promoted": false,
+      "minMarginPct": 10
+    }
+  ],
+  "quotes": [
+    {
+      "id": "q_89vzf",
+      "ownerId": "u_29t9b",
+      "customerId": "c_79t9b",
+      "customerName": "Acme Corp",
+      "customerTier": "Gold",
+      "currency": "USD",
+      "lines": [
+        {
+          "id": "l_a9wao",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 1150,
+          "taxRate": 18,
+          "discountPct": 12,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_c9wid",
+          "productId": "p_setup",
+          "category": "Services",
+          "name": "Setup Service",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 1,
+          "unitPrice": 500,
+          "taxRate": 18,
+          "discountPct": 25,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_e9wqu",
+          "productId": "p_mouse",
+          "category": "Hardware",
+          "name": "Wireless Mouse",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 40,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_g9x3d",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 5,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      ],
+      "status": "approved",
+      "approvals": [
+        {
+          "role": "manager",
+          "status": "approved",
+          "at": "2026-09-05T04:12:36.082Z",
+          "by": "u_19t9b",
+          "reason": ""
+        },
+        {
+          "role": "finance",
+          "status": "approved",
+          "at": "2026-09-05T04:12:36.751Z",
+          "by": "u_19t9b",
+          "reason": ""
+        }
+      ],
+      "comments": [
+        {
+          "id": "cm_oa081",
+          "by": "c_79t9b",
+          "role": "customer",
+          "lineId": "l_c9wid",
+          "comment": "Need better rate",
+          "counterDiscountPct": 25,
+          "at": "2026-09-05T04:12:34.849Z"
+        }
+      ],
+      "createdAt": "2026-09-05T04:12:29.355Z",
+      "updatedAt": "2026-09-05T04:12:36.751Z",
+      "risk": {
+        "score": 9.72,
+        "level": "MANAGER_FINANCE",
+        "steps": [
+          {
+            "role": "manager",
+            "status": "pending"
+          },
+          {
+            "role": "finance",
+            "status": "pending"
+          }
+        ],
+        "orderDisc": 12.61,
+        "avgOver": 2.22,
+        "maxOver": 15,
+        "detail": [
+          {
+            "lineId": "l_a9wao",
+            "given": 12,
+            "allowed": 15,
+            "over": 0
+          },
+          {
+            "lineId": "l_c9wid",
+            "given": 25,
+            "allowed": 10,
+            "over": 15
+          },
+          {
+            "lineId": "l_e9wqu",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          },
+          {
+            "lineId": "l_g9x3d",
+            "given": 5,
+            "allowed": 15,
+            "over": 0
+          }
+        ],
+        "tierCeiling": 15,
+        "managerUpTo": 5
+      },
+      "orderDisc": 12.61,
+      "fulfillment": {
+        "plan": {
+          "allocations": [
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_laptop",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_setup",
+              "qty": 1
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_mouse",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_support",
+              "qty": 5
+            }
+          ],
+          "backorder": [],
+          "shipments": 1,
+          "estCost": 10
+        },
+        "decided": [
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_laptop",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_setup",
+            "qty": 1
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_mouse",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_support",
+            "qty": 5
+          }
+        ],
+        "status": "decided"
+      }
+    },
+    {
+      "id": "q_ya5in",
+      "ownerId": "u_29t9b",
+      "customerId": "c_79t9b",
+      "customerName": "Acme",
+      "customerTier": "Gold",
+      "currency": "EUR",
+      "lines": [
+        {
+          "id": "l_10a638",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": "v_16gb",
+          "variantLabel": "RAM:16GB",
+          "qty": 1,
+          "unitPrice": 1200,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_12a7no",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      ],
+      "status": "draft",
+      "approvals": [],
+      "comments": [],
+      "createdAt": "2026-09-05T04:12:41.711Z",
+      "updatedAt": "2026-09-05T04:12:45.241Z",
+      "risk": {
+        "score": 0,
+        "level": "NONE",
+        "steps": [],
+        "orderDisc": 0,
+        "avgOver": 0,
+        "maxOver": 0,
+        "detail": [
+          {
+            "lineId": "l_10a638",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          },
+          {
+            "lineId": "l_12a7no",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          }
+        ],
+        "tierCeiling": 15,
+        "managerUpTo": 5
+      },
+      "orderDisc": 0
+    },
+    {
+      "id": "q_18b5cb",
+      "ownerId": "u_29t9b",
+      "customerId": "c_79t9b",
+      "customerName": "Acme Corp",
+      "customerTier": "Gold",
+      "currency": "USD",
+      "lines": [
+        {
+          "id": "l_1ab5yt",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 1150,
+          "taxRate": 18,
+          "discountPct": 12,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_1cb6lc",
+          "productId": "p_setup",
+          "category": "Services",
+          "name": "Setup Service",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 1,
+          "unitPrice": 500,
+          "taxRate": 18,
+          "discountPct": 25,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_1eb811",
+          "productId": "p_mouse",
+          "category": "Hardware",
+          "name": "Wireless Mouse",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 40,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_1gb8o4",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 5,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      ],
+      "status": "approved",
+      "approvals": [
+        {
+          "role": "manager",
+          "status": "approved",
+          "at": "2026-09-05T04:13:41.308Z",
+          "by": "u_19t9b",
+          "reason": ""
+        },
+        {
+          "role": "finance",
+          "status": "approved",
+          "at": "2026-09-05T04:13:44.590Z",
+          "by": "u_19t9b",
+          "reason": ""
+        }
+      ],
+      "comments": [
+        {
+          "id": "cm_1obdai",
+          "by": "c_79t9b",
+          "role": "customer",
+          "lineId": "l_1cb6lc",
+          "comment": "Need better rate",
+          "counterDiscountPct": 25,
+          "at": "2026-09-05T04:13:38.442Z"
+        }
+      ],
+      "createdAt": "2026-09-05T04:13:28.139Z",
+      "updatedAt": "2026-09-05T04:13:44.590Z",
+      "risk": {
+        "score": 9.72,
+        "level": "MANAGER_FINANCE",
+        "steps": [
+          {
+            "role": "manager",
+            "status": "pending"
+          },
+          {
+            "role": "finance",
+            "status": "pending"
+          }
+        ],
+        "orderDisc": 12.61,
+        "avgOver": 2.22,
+        "maxOver": 15,
+        "detail": [
+          {
+            "lineId": "l_1ab5yt",
+            "given": 12,
+            "allowed": 15,
+            "over": 0
+          },
+          {
+            "lineId": "l_1cb6lc",
+            "given": 25,
+            "allowed": 10,
+            "over": 15
+          },
+          {
+            "lineId": "l_1eb811",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          },
+          {
+            "lineId": "l_1gb8o4",
+            "given": 5,
+            "allowed": 15,
+            "over": 0
+          }
+        ],
+        "tierCeiling": 15,
+        "managerUpTo": 5
+      },
+      "orderDisc": 12.61,
+      "fulfillment": {
+        "plan": {
+          "allocations": [
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_laptop",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_setup",
+              "qty": 1
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_mouse",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_support",
+              "qty": 5
+            }
+          ],
+          "backorder": [],
+          "shipments": 1,
+          "estCost": 10
+        },
+        "decided": [
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_laptop",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_setup",
+            "qty": 1
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_mouse",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_support",
+            "qty": 5
+          }
+        ],
+        "status": "decided"
+      }
+    },
+    {
+      "id": "q_1ybmdo",
+      "ownerId": "u_29t9b",
+      "customerId": "c_79t9b",
+      "customerName": "Acme",
+      "customerTier": "Gold",
+      "currency": "EUR",
+      "lines": [
+        {
+          "id": "l_20bn78",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": "v_16gb",
+          "variantLabel": "RAM:16GB",
+          "qty": 1,
+          "unitPrice": 1200,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_22bolb",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      ],
+      "status": "draft",
+      "approvals": [],
+      "comments": [],
+      "createdAt": "2026-09-05T04:13:50.220Z",
+      "updatedAt": "2026-09-05T04:13:54.157Z",
+      "risk": {
+        "score": 0,
+        "level": "NONE",
+        "steps": [],
+        "orderDisc": 0,
+        "avgOver": 0,
+        "maxOver": 0,
+        "detail": [
+          {
+            "lineId": "l_20bn78",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          },
+          {
+            "lineId": "l_22bolb",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          }
+        ],
+        "tierCeiling": 15,
+        "managerUpTo": 5
+      },
+      "orderDisc": 0
+    },
+    {
+      "id": "q_2aby6r",
+      "ownerId": "u_29t9b",
+      "customerId": "c_79t9b",
+      "customerName": "Acme",
+      "customerTier": "Gold",
+      "currency": "EUR",
+      "lines": [
+        {
+          "id": "l_2cbzc4",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": "v_16gb",
+          "variantLabel": "RAM:16GB",
+          "qty": 1,
+          "unitPrice": 1200,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_2ec08p",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      ],
+      "status": "draft",
+      "approvals": [],
+      "comments": [],
+      "createdAt": "2026-09-05T04:14:05.523Z",
+      "updatedAt": "2026-09-05T04:14:09.841Z",
+      "risk": {
+        "score": 0,
+        "level": "NONE",
+        "steps": [],
+        "orderDisc": 0,
+        "avgOver": 0,
+        "maxOver": 0,
+        "detail": [
+          {
+            "lineId": "l_2cbzc4",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          },
+          {
+            "lineId": "l_2ec08p",
+            "given": 0,
+            "allowed": 15,
+            "over": 0
+          }
+        ],
+        "tierCeiling": 15,
+        "managerUpTo": 5
+      },
+      "orderDisc": 0
+    }
+  ],
+  "orders": [
+    {
+      "id": "o_m9zsb",
+      "quoteId": "q_89vzf",
+      "lines": [
+        {
+          "id": "l_a9wao",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 1150,
+          "taxRate": 18,
+          "discountPct": 12,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_c9wid",
+          "productId": "p_setup",
+          "category": "Services",
+          "name": "Setup Service",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 1,
+          "unitPrice": 500,
+          "taxRate": 18,
+          "discountPct": 25,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_e9wqu",
+          "productId": "p_mouse",
+          "category": "Hardware",
+          "name": "Wireless Mouse",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 40,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_g9x3d",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 5,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      ],
+      "fulfillment": {
+        "plan": {
+          "allocations": [
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_laptop",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_setup",
+              "qty": 1
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_mouse",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_support",
+              "qty": 5
+            }
+          ],
+          "backorder": [],
+          "shipments": 1,
+          "estCost": 10
+        },
+        "decided": [
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_laptop",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_setup",
+            "qty": 1
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_mouse",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_support",
+            "qty": 5
+          }
+        ],
+        "status": "decided"
+      },
+      "billing": {
+        "oneTime": [
+          {
+            "lineId": "l_a9wao",
+            "amount": 2024
+          },
+          {
+            "lineId": "l_c9wid",
+            "amount": 410
+          },
+          {
+            "lineId": "l_e9wqu",
+            "amount": 80
+          }
+        ],
+        "recurring": [
+          {
+            "lineId": "l_g9x3d",
+            "cycle": "monthly",
+            "perCycle": 470.25,
+            "schedule": [
+              {
+                "period": 1,
+                "due": "2026-09-05",
+                "amount": 407.55,
+                "note": "Prorated 26/30 days"
+              },
+              {
+                "period": 2,
+                "due": "2026-10-05",
+                "amount": 470.25,
+                "note": "Full cycle"
+              },
+              {
+                "period": 3,
+                "due": "2026-11-04",
+                "amount": 470.25,
+                "note": "Full cycle"
+              }
+            ]
+          }
+        ],
+        "oneTimeTotal": 2514,
+        "start": "2026-09-05T04:12:34.282Z"
+      },
+      "totals": {
+        "subtotal": 3375,
+        "discount": 390.75,
+        "net": 2984.25,
+        "tax": 537.17,
+        "grand": 3521.42
+      },
+      "currency": "USD",
+      "status": "open",
+      "createdAt": "2026-09-05T04:12:34.283Z"
+    },
+    {
+      "id": "o_1mbclp",
+      "quoteId": "q_18b5cb",
+      "lines": [
+        {
+          "id": "l_1ab5yt",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 1150,
+          "taxRate": 18,
+          "discountPct": 12,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_1cb6lc",
+          "productId": "p_setup",
+          "category": "Services",
+          "name": "Setup Service",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 1,
+          "unitPrice": 500,
+          "taxRate": 18,
+          "discountPct": 25,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_1eb811",
+          "productId": "p_mouse",
+          "category": "Hardware",
+          "name": "Wireless Mouse",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 40,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        },
+        {
+          "id": "l_1gb8o4",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 5,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      ],
+      "fulfillment": {
+        "plan": {
+          "allocations": [
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_laptop",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_setup",
+              "qty": 1
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_mouse",
+              "qty": 2
+            },
+            {
+              "warehouseId": "w_main",
+              "warehouseName": "Main Warehouse",
+              "productId": "p_support",
+              "qty": 5
+            }
+          ],
+          "backorder": [],
+          "shipments": 1,
+          "estCost": 10
+        },
+        "decided": [
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_laptop",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_setup",
+            "qty": 1
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_mouse",
+            "qty": 2
+          },
+          {
+            "warehouseId": "w_main",
+            "warehouseName": "Main Warehouse",
+            "productId": "p_support",
+            "qty": 5
+          }
+        ],
+        "status": "decided"
+      },
+      "billing": {
+        "oneTime": [
+          {
+            "lineId": "l_1ab5yt",
+            "amount": 2024
+          },
+          {
+            "lineId": "l_1cb6lc",
+            "amount": 410
+          },
+          {
+            "lineId": "l_1eb811",
+            "amount": 80
+          }
+        ],
+        "recurring": [
+          {
+            "lineId": "l_1gb8o4",
+            "cycle": "monthly",
+            "perCycle": 470.25,
+            "schedule": [
+              {
+                "period": 1,
+                "due": "2026-09-05",
+                "amount": 407.55,
+                "note": "Prorated 26/30 days"
+              },
+              {
+                "period": 2,
+                "due": "2026-10-05",
+                "amount": 470.25,
+                "note": "Full cycle"
+              },
+              {
+                "period": 3,
+                "due": "2026-11-04",
+                "amount": 470.25,
+                "note": "Full cycle"
+              }
+            ]
+          }
+        ],
+        "oneTimeTotal": 2514,
+        "start": "2026-09-05T04:13:37.548Z"
+      },
+      "totals": {
+        "subtotal": 3375,
+        "discount": 390.75,
+        "net": 2984.25,
+        "tax": 537.17,
+        "grand": 3521.42
+      },
+      "currency": "USD",
+      "status": "open",
+      "createdAt": "2026-09-05T04:13:37.549Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv_mtnva3a9",
+      "orderId": "o_m9zsb",
+      "currency": "USD",
+      "oneTimeTotal": 2514,
+      "recurring": [
+        {
+          "lineId": "l_g9x3d",
+          "cycle": "monthly",
+          "perCycle": 470.25,
+          "schedule": [
+            {
+              "period": 1,
+              "due": "2026-09-05",
+              "amount": 407.55,
+              "note": "Prorated 26/30 days"
+            },
+            {
+              "period": 2,
+              "due": "2026-10-05",
+              "amount": 470.25,
+              "note": "Full cycle"
+            },
+            {
+              "period": 3,
+              "due": "2026-11-04",
+              "amount": 470.25,
+              "note": "Full cycle"
+            }
+          ]
+        }
+      ],
+      "subtotal": 3375,
+      "discount": 390.75,
+      "tax": 537.17,
+      "grand": 3521.42,
+      "status": "paid",
+      "createdAt": "2026-09-05T04:12:38.817Z",
+      "paidAt": "2026-09-05T04:12:38.823Z"
+    },
+    {
+      "id": "inv_mtnvbiqj",
+      "orderId": "o_1mbclp",
+      "currency": "USD",
+      "oneTimeTotal": 2514,
+      "recurring": [
+        {
+          "lineId": "l_1gb8o4",
+          "cycle": "monthly",
+          "perCycle": 470.25,
+          "schedule": [
+            {
+              "period": 1,
+              "due": "2026-09-05",
+              "amount": 407.55,
+              "note": "Prorated 26/30 days"
+            },
+            {
+              "period": 2,
+              "due": "2026-10-05",
+              "amount": 470.25,
+              "note": "Full cycle"
+            },
+            {
+              "period": 3,
+              "due": "2026-11-04",
+              "amount": 470.25,
+              "note": "Full cycle"
+            }
+          ]
+        }
+      ],
+      "subtotal": 3375,
+      "discount": 390.75,
+      "tax": 537.17,
+      "grand": 3521.42,
+      "status": "paid",
+      "createdAt": "2026-09-05T04:13:45.499Z",
+      "paidAt": "2026-09-05T04:13:45.506Z"
+    }
+  ],
+  "creditNotes": [
+    {
+      "id": "dn_14a88p",
+      "quoteId": "q_ya5in",
+      "lineId": "l_12a7no",
+      "amount": 297,
+      "kind": "debit",
+      "reason": "mid-cycle modification proration",
+      "createdAt": "2026-09-05T04:12:45.241Z",
+      "by": "u_29t9b"
+    },
+    {
+      "id": "dn_24bpf1",
+      "quoteId": "q_1ybmdo",
+      "lineId": "l_22bolb",
+      "amount": 297,
+      "kind": "debit",
+      "reason": "mid-cycle modification proration",
+      "createdAt": "2026-09-05T04:13:54.157Z",
+      "by": "u_29t9b"
+    },
+    {
+      "id": "dn_2gc1ip",
+      "quoteId": "q_2aby6r",
+      "lineId": "l_2ec08p",
+      "amount": 297,
+      "kind": "debit",
+      "reason": "mid-cycle modification proration",
+      "createdAt": "2026-09-05T04:14:09.841Z",
+      "by": "u_29t9b"
+    }
+  ],
+  "auditLog": [
+    {
+      "id": "aud_11a638",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_ya5in",
+      "detail": {
+        "line": {
+          "id": "l_10a638",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": "v_16gb",
+          "variantLabel": "RAM:16GB",
+          "qty": 1,
+          "unitPrice": 1200,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:12:42.452Z"
+    },
+    {
+      "id": "aud_13a7np",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_ya5in",
+      "detail": {
+        "line": {
+          "id": "l_12a7no",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:12:44.485Z"
+    },
+    {
+      "id": "aud_15a88p",
+      "actor": "u_29t9b",
+      "action": "sub-modify",
+      "entity": "quote",
+      "entityId": "q_ya5in",
+      "detail": {
+        "delta": 297
+      },
+      "at": "2026-09-05T04:12:45.241Z"
+    },
+    {
+      "id": "aud_17a8up",
+      "actor": "c_16a8up",
+      "action": "signup",
+      "entity": "customer",
+      "entityId": "c_16a8up",
+      "detail": {},
+      "at": "2026-09-05T04:12:46.033Z"
+    },
+    {
+      "id": "aud_99vzg",
+      "actor": "u_29t9b",
+      "action": "create",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {},
+      "at": "2026-09-05T04:12:29.356Z"
+    },
+    {
+      "id": "aud_b9wao",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "line": {
+          "id": "l_a9wao",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 1150,
+          "taxRate": 18,
+          "discountPct": 12,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:12:29.760Z"
+    },
+    {
+      "id": "aud_d9wie",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "line": {
+          "id": "l_c9wid",
+          "productId": "p_setup",
+          "category": "Services",
+          "name": "Setup Service",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 1,
+          "unitPrice": 500,
+          "taxRate": 18,
+          "discountPct": 25,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:12:30.038Z"
+    },
+    {
+      "id": "aud_f9wqv",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "line": {
+          "id": "l_e9wqu",
+          "productId": "p_mouse",
+          "category": "Hardware",
+          "name": "Wireless Mouse",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 40,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:12:30.343Z"
+    },
+    {
+      "id": "aud_h9x3d",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "line": {
+          "id": "l_g9x3d",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 5,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:12:30.793Z"
+    },
+    {
+      "id": "aud_i9xhi",
+      "actor": "u_29t9b",
+      "action": "confirm",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "risk": {
+          "score": 5.19,
+          "level": "MANAGER_FINANCE",
+          "steps": [
+            {
+              "role": "manager",
+              "status": "pending"
+            },
+            {
+              "role": "finance",
+              "status": "pending"
+            }
+          ],
+          "orderDisc": 11.58,
+          "avgOver": 1.19,
+          "maxOver": 8,
+          "detail": [
+            {
+              "lineId": "l_a9wao",
+              "given": 12,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_c9wid",
+              "given": 18,
+              "allowed": 10,
+              "over": 8
+            },
+            {
+              "lineId": "l_e9wqu",
+              "given": 0,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_g9x3d",
+              "given": 5,
+              "allowed": 15,
+              "over": 0
+            }
+          ],
+          "tierCeiling": 15,
+          "managerUpTo": 5
+        }
+      },
+      "at": "2026-09-05T04:12:31.302Z"
+    },
+    {
+      "id": "aud_j9xuy",
+      "actor": "u_29t9b",
+      "action": "confirm",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "risk": {
+          "score": 5.19,
+          "level": "MANAGER_FINANCE",
+          "steps": [
+            {
+              "role": "manager",
+              "status": "pending"
+            },
+            {
+              "role": "finance",
+              "status": "pending"
+            }
+          ],
+          "orderDisc": 11.58,
+          "avgOver": 1.19,
+          "maxOver": 8,
+          "detail": [
+            {
+              "lineId": "l_a9wao",
+              "given": 12,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_c9wid",
+              "given": 18,
+              "allowed": 10,
+              "over": 8
+            },
+            {
+              "lineId": "l_e9wqu",
+              "given": 0,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_g9x3d",
+              "given": 5,
+              "allowed": 15,
+              "over": 0
+            }
+          ],
+          "tierCeiling": 15,
+          "managerUpTo": 5
+        }
+      },
+      "at": "2026-09-05T04:12:31.786Z"
+    },
+    {
+      "id": "aud_k9yxe",
+      "actor": "u_49t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "reason": "ok"
+      },
+      "at": "2026-09-05T04:12:33.170Z"
+    },
+    {
+      "id": "aud_l9zcg",
+      "actor": "u_59t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "reason": "ok"
+      },
+      "at": "2026-09-05T04:12:33.712Z"
+    },
+    {
+      "id": "aud_n9zsb",
+      "actor": "u_19t9b",
+      "action": "fulfill:accept",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {},
+      "at": "2026-09-05T04:12:34.283Z"
+    },
+    {
+      "id": "aud_pa082",
+      "actor": "c_79t9b",
+      "action": "negotiate",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "lineId": "l_c9wid",
+        "counterDiscountPct": 25
+      },
+      "at": "2026-09-05T04:12:34.850Z"
+    },
+    {
+      "id": "aud_qa0om",
+      "actor": "c_79t9b",
+      "action": "portal-confirm",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {
+        "risk": {
+          "score": 9.72,
+          "level": "MANAGER_FINANCE",
+          "steps": [
+            {
+              "role": "manager",
+              "status": "pending"
+            },
+            {
+              "role": "finance",
+              "status": "pending"
+            }
+          ],
+          "orderDisc": 12.61,
+          "avgOver": 2.22,
+          "maxOver": 15,
+          "detail": [
+            {
+              "lineId": "l_a9wao",
+              "given": 12,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_c9wid",
+              "given": 25,
+              "allowed": 10,
+              "over": 15
+            },
+            {
+              "lineId": "l_e9wqu",
+              "given": 0,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_g9x3d",
+              "given": 5,
+              "allowed": 15,
+              "over": 0
+            }
+          ],
+          "tierCeiling": 15,
+          "managerUpTo": 5
+        }
+      },
+      "at": "2026-09-05T04:12:35.446Z"
+    },
+    {
+      "id": "aud_ra16a",
+      "actor": "u_19t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {},
+      "at": "2026-09-05T04:12:36.082Z"
+    },
+    {
+      "id": "aud_sa1ov",
+      "actor": "u_19t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_89vzf",
+      "detail": {},
+      "at": "2026-09-05T04:12:36.751Z"
+    },
+    {
+      "id": "aud_ta3af",
+      "actor": "u_19t9b",
+      "action": "pay",
+      "entity": "invoice",
+      "entityId": "inv_mtnva3a9",
+      "detail": {
+        "amount": 2514
+      },
+      "at": "2026-09-05T04:12:38.823Z"
+    },
+    {
+      "id": "aud_va3xe",
+      "actor": "u_19t9b",
+      "action": "add-variant",
+      "entity": "product",
+      "entityId": "p_laptop",
+      "detail": {
+        "v": {
+          "id": "v_ua3xe",
+          "attribute": "RAM",
+          "value": "32GB",
+          "extraPrice": 300
+        }
+      },
+      "at": "2026-09-05T04:12:39.650Z"
+    },
+    {
+      "id": "aud_xa4fz",
+      "actor": "u_19t9b",
+      "action": "upsert",
+      "entity": "approvalChain",
+      "entityId": "a_wa4fz",
+      "detail": {},
+      "at": "2026-09-05T04:12:40.319Z"
+    },
+    {
+      "id": "aud_za5in",
+      "actor": "u_29t9b",
+      "action": "create",
+      "entity": "quote",
+      "entityId": "q_ya5in",
+      "detail": {},
+      "at": "2026-09-05T04:12:41.711Z"
+    },
+    {
+      "id": "aud_19b5cc",
+      "actor": "u_29t9b",
+      "action": "create",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {},
+      "at": "2026-09-05T04:13:28.140Z"
+    },
+    {
+      "id": "aud_1bb5yt",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "line": {
+          "id": "l_1ab5yt",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 1150,
+          "taxRate": 18,
+          "discountPct": 12,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:13:28.949Z"
+    },
+    {
+      "id": "aud_1db6lc",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "line": {
+          "id": "l_1cb6lc",
+          "productId": "p_setup",
+          "category": "Services",
+          "name": "Setup Service",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 1,
+          "unitPrice": 500,
+          "taxRate": 18,
+          "discountPct": 25,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:13:29.760Z"
+    },
+    {
+      "id": "aud_1fb811",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "line": {
+          "id": "l_1eb811",
+          "productId": "p_mouse",
+          "category": "Hardware",
+          "name": "Wireless Mouse",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 2,
+          "unitPrice": 40,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:13:31.621Z"
+    },
+    {
+      "id": "aud_1hb8o5",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "line": {
+          "id": "l_1gb8o4",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 5,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:13:32.453Z"
+    },
+    {
+      "id": "aud_1ib9ck",
+      "actor": "u_29t9b",
+      "action": "confirm",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "risk": {
+          "score": 5.19,
+          "level": "MANAGER_FINANCE",
+          "steps": [
+            {
+              "role": "manager",
+              "status": "pending"
+            },
+            {
+              "role": "finance",
+              "status": "pending"
+            }
+          ],
+          "orderDisc": 11.58,
+          "avgOver": 1.19,
+          "maxOver": 8,
+          "detail": [
+            {
+              "lineId": "l_1ab5yt",
+              "given": 12,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_1cb6lc",
+              "given": 18,
+              "allowed": 10,
+              "over": 8
+            },
+            {
+              "lineId": "l_1eb811",
+              "given": 0,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_1gb8o4",
+              "given": 5,
+              "allowed": 15,
+              "over": 0
+            }
+          ],
+          "tierCeiling": 15,
+          "managerUpTo": 5
+        }
+      },
+      "at": "2026-09-05T04:13:33.332Z"
+    },
+    {
+      "id": "aud_1jba16",
+      "actor": "u_29t9b",
+      "action": "confirm",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "risk": {
+          "score": 5.19,
+          "level": "MANAGER_FINANCE",
+          "steps": [
+            {
+              "role": "manager",
+              "status": "pending"
+            },
+            {
+              "role": "finance",
+              "status": "pending"
+            }
+          ],
+          "orderDisc": 11.58,
+          "avgOver": 1.19,
+          "maxOver": 8,
+          "detail": [
+            {
+              "lineId": "l_1ab5yt",
+              "given": 12,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_1cb6lc",
+              "given": 18,
+              "allowed": 10,
+              "over": 8
+            },
+            {
+              "lineId": "l_1eb811",
+              "given": 0,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_1gb8o4",
+              "given": 5,
+              "allowed": 15,
+              "over": 0
+            }
+          ],
+          "tierCeiling": 15,
+          "managerUpTo": 5
+        }
+      },
+      "at": "2026-09-05T04:13:34.218Z"
+    },
+    {
+      "id": "aud_1kbapo",
+      "actor": "u_49t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "reason": "ok"
+      },
+      "at": "2026-09-05T04:13:35.100Z"
+    },
+    {
+      "id": "aud_1lbbwi",
+      "actor": "u_59t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "reason": "ok"
+      },
+      "at": "2026-09-05T04:13:36.642Z"
+    },
+    {
+      "id": "aud_1nbclp",
+      "actor": "u_19t9b",
+      "action": "fulfill:accept",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {},
+      "at": "2026-09-05T04:13:37.549Z"
+    },
+    {
+      "id": "aud_1pbdaj",
+      "actor": "c_79t9b",
+      "action": "negotiate",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "lineId": "l_1cb6lc",
+        "counterDiscountPct": 25
+      },
+      "at": "2026-09-05T04:13:38.443Z"
+    },
+    {
+      "id": "aud_1qbe0n",
+      "actor": "c_79t9b",
+      "action": "portal-confirm",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {
+        "risk": {
+          "score": 9.72,
+          "level": "MANAGER_FINANCE",
+          "steps": [
+            {
+              "role": "manager",
+              "status": "pending"
+            },
+            {
+              "role": "finance",
+              "status": "pending"
+            }
+          ],
+          "orderDisc": 12.61,
+          "avgOver": 2.22,
+          "maxOver": 15,
+          "detail": [
+            {
+              "lineId": "l_1ab5yt",
+              "given": 12,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_1cb6lc",
+              "given": 25,
+              "allowed": 10,
+              "over": 15
+            },
+            {
+              "lineId": "l_1eb811",
+              "given": 0,
+              "allowed": 15,
+              "over": 0
+            },
+            {
+              "lineId": "l_1gb8o4",
+              "given": 5,
+              "allowed": 15,
+              "over": 0
+            }
+          ],
+          "tierCeiling": 15,
+          "managerUpTo": 5
+        }
+      },
+      "at": "2026-09-05T04:13:39.383Z"
+    },
+    {
+      "id": "aud_1rbfi4",
+      "actor": "u_19t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {},
+      "at": "2026-09-05T04:13:41.308Z"
+    },
+    {
+      "id": "aud_1sbi1a",
+      "actor": "u_19t9b",
+      "action": "review:approve",
+      "entity": "quote",
+      "entityId": "q_18b5cb",
+      "detail": {},
+      "at": "2026-09-05T04:13:44.590Z"
+    },
+    {
+      "id": "aud_1tbiqq",
+      "actor": "u_19t9b",
+      "action": "pay",
+      "entity": "invoice",
+      "entityId": "inv_mtnvbiqj",
+      "detail": {
+        "amount": 2514
+      },
+      "at": "2026-09-05T04:13:45.506Z"
+    },
+    {
+      "id": "aud_1vbjn7",
+      "actor": "u_19t9b",
+      "action": "add-variant",
+      "entity": "product",
+      "entityId": "p_laptop",
+      "detail": {
+        "v": {
+          "id": "v_1ubjn7",
+          "attribute": "RAM",
+          "value": "32GB",
+          "extraPrice": 300
+        }
+      },
+      "at": "2026-09-05T04:13:46.675Z"
+    },
+    {
+      "id": "aud_1xbll7",
+      "actor": "u_19t9b",
+      "action": "upsert",
+      "entity": "approvalChain",
+      "entityId": "a_1wbll7",
+      "detail": {},
+      "at": "2026-09-05T04:13:49.195Z"
+    },
+    {
+      "id": "aud_1zbmdo",
+      "actor": "u_29t9b",
+      "action": "create",
+      "entity": "quote",
+      "entityId": "q_1ybmdo",
+      "detail": {},
+      "at": "2026-09-05T04:13:50.220Z"
+    },
+    {
+      "id": "aud_21bn78",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_1ybmdo",
+      "detail": {
+        "line": {
+          "id": "l_20bn78",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": "v_16gb",
+          "variantLabel": "RAM:16GB",
+          "qty": 1,
+          "unitPrice": 1200,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:13:51.284Z"
+    },
+    {
+      "id": "aud_23bolb",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_1ybmdo",
+      "detail": {
+        "line": {
+          "id": "l_22bolb",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:13:53.087Z"
+    },
+    {
+      "id": "aud_25bpf1",
+      "actor": "u_29t9b",
+      "action": "sub-modify",
+      "entity": "quote",
+      "entityId": "q_1ybmdo",
+      "detail": {
+        "delta": 297
+      },
+      "at": "2026-09-05T04:13:54.157Z"
+    },
+    {
+      "id": "aud_27bvtr",
+      "actor": "u_19t9b",
+      "action": "add-variant",
+      "entity": "product",
+      "entityId": "p_laptop",
+      "detail": {
+        "v": {
+          "id": "v_26bvtr",
+          "attribute": "RAM",
+          "value": "32GB",
+          "extraPrice": 300
+        }
+      },
+      "at": "2026-09-05T04:14:02.463Z"
+    },
+    {
+      "id": "aud_29bxaq",
+      "actor": "u_19t9b",
+      "action": "upsert",
+      "entity": "approvalChain",
+      "entityId": "a_28bxaq",
+      "detail": {},
+      "at": "2026-09-05T04:14:04.370Z"
+    },
+    {
+      "id": "aud_2bby6r",
+      "actor": "u_29t9b",
+      "action": "create",
+      "entity": "quote",
+      "entityId": "q_2aby6r",
+      "detail": {},
+      "at": "2026-09-05T04:14:05.523Z"
+    },
+    {
+      "id": "aud_2dbzc4",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_2aby6r",
+      "detail": {
+        "line": {
+          "id": "l_2cbzc4",
+          "productId": "p_laptop",
+          "category": "Hardware",
+          "name": "Laptop Pro 15",
+          "variantId": "v_16gb",
+          "variantLabel": "RAM:16GB",
+          "qty": 1,
+          "unitPrice": 1200,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "onetime",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:14:07.012Z"
+    },
+    {
+      "id": "aud_2fc08p",
+      "actor": "u_29t9b",
+      "action": "add-line",
+      "entity": "quote",
+      "entityId": "q_2aby6r",
+      "detail": {
+        "line": {
+          "id": "l_2ec08p",
+          "productId": "p_support",
+          "category": "Subscriptions",
+          "name": "Support Plan",
+          "variantId": null,
+          "variantLabel": null,
+          "qty": 5,
+          "unitPrice": 99,
+          "taxRate": 18,
+          "discountPct": 0,
+          "billingType": "recurring",
+          "cycle": "monthly"
+        }
+      },
+      "at": "2026-09-05T04:14:08.185Z"
+    },
+    {
+      "id": "aud_2hc1ip",
+      "actor": "u_29t9b",
+      "action": "sub-modify",
+      "entity": "quote",
+      "entityId": "q_2aby6r",
+      "detail": {
+        "delta": 297
+      },
+      "at": "2026-09-05T04:14:09.841Z"
+    },
+    {
+      "id": "aud_2jc3g9",
+      "actor": "c_2ic3g9",
+      "action": "signup",
+      "entity": "customer",
+      "entityId": "c_2ic3g9",
+      "detail": {},
+      "at": "2026-09-05T04:14:12.345Z"
+    }
+  ]
+}
