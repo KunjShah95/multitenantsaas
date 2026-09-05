@@ -4,6 +4,7 @@ import * as schema from "../../db/schema/index.js";
 import { ApiError } from "../../shared/errors.js";
 import { writeAuditEvent } from "../../shared/audit.js";
 import { generateOrderNumber } from "./orderNumber.js";
+import { BillingService } from "../billing/billing.service.js";
 
 export interface ConvertQuoteToOrderInput {
   tenantId: string;
@@ -59,6 +60,14 @@ export class OrdersService {
         .select()
         .from(schema.orderLines)
         .where(and(eq(schema.orderLines.tenantId, tenantId), eq(schema.orderLines.orderId, existingOrder.id)));
+
+      await BillingService.initializeBillingForOrder(tx, {
+        tenantId,
+        orderId: existingOrder.id,
+        actorId,
+        requestId,
+      });
+
       return { order: existingOrder, lines, isExisting: true };
     }
 
@@ -210,6 +219,13 @@ export class OrdersService {
         status: order.status,
         revision: order.revision,
       },
+    });
+
+    await BillingService.initializeBillingForOrder(tx, {
+      tenantId,
+      orderId: order.id,
+      actorId,
+      requestId,
     });
 
     return { order, lines: insertedLines, isExisting: false };

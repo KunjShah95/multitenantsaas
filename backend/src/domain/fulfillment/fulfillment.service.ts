@@ -4,6 +4,7 @@ import * as schema from "../../db/schema/index.js";
 import { ApiError } from "../../shared/errors.js";
 import { writeAuditEvent } from "../../shared/audit.js";
 import { generateShipmentNumber } from "../orders/orderNumber.js";
+import { BillingService } from "../billing/billing.service.js";
 import {
   optimizeFulfillment,
   type OptimizerItem,
@@ -708,6 +709,13 @@ export class FulfillmentService {
         status: newOrderStatus,
         revision: updatedOrder.revision,
       },
+    });
+
+    await BillingService.issueOneTimeInvoiceOnShipment(tx, {
+      tenantId,
+      orderId: order.id,
+      actorId,
+      requestId,
     });
 
     return {

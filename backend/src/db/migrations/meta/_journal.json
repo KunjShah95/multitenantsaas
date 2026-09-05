@@ -85,6 +85,20 @@
       "when": 1788603134414,
       "tag": "0011_tearful_queen_noir",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1788604423196,
+      "tag": "0012_glorious_white_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1788604423197,
+      "tag": "0013_enable_rls_phase8",
+      "breakpoints": true
     }
   ]
 }

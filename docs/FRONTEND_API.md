@@ -138,12 +138,18 @@ Example fields:
 | `POST /orders/:id/fulfillment-plans/confirm` **idempotent** | `{ planId }` or manual allocations + `If-Match`; reserves or returns `409` fresh plan. |
 | `POST /orders/:id/shipments` **idempotent** | Warehouse/reservation IDs, carrier/tracking optional. |
 | `POST /orders/:id/backorders/replan` **idempotent** | New plan from live availability. |
-| `GET /subscriptions`, `GET /subscriptions/:id` | Subscription state and next bill. |
-| `POST /subscriptions/:id/changes/preview` | Quantity/plan/discount/effective date; no mutation. |
-| `POST /subscriptions/:id/changes` **idempotent** | Applies change and adjustment. |
-| `POST /subscriptions/:id/cancel` **idempotent** | Effective date/reason; credit/refund result. |
-| `GET /invoices`, `GET /invoices/:id` | Filter status/customer/order/date; lines/adjustments/payments. |
-| `POST /invoices/:id/record-payment` **idempotent** | Back-office/demo payment: amount/date/reference/method. |
+| `GET /subscriptions`, `GET /subscriptions/:id` | Subscription state, next bill, and `capabilities`. |
+| `POST /subscriptions/:id/changes/preview` | `{ quantity?, discountPct?, unitPrice?, effectiveAt }` ISO-8601; no mutation. |
+| `POST /subscriptions/:id/changes` **idempotent** | Same body + `If-Match`; applies change and debit/credit adjustment. |
+| `POST /subscriptions/:id/cancel` **idempotent** | `{ effectiveAt, reason? }` + `If-Match`; credit/refund result. |
+| `GET /invoices`, `GET /invoices/:id` | Filter `status`/`customerId`/`orderId`/`fromDate`/`toDate`; lines/adjustments/payments. |
+| `POST /invoices/:id/record-payment` **idempotent** | Manual/demo only: `{ amount, paidAt, reference?, method: "manual" }`. Finance/admin. |
+
+Billing notes:
+
+- Mixed quote conversion creates a **draft** one-time invoice (issued on first shipment, Net-30) plus **active** subscriptions for recurring lines. Recurring invoices are independent of fulfillment.
+- Responses include `capabilities.automaticCollectionEnabled` and `capabilities.recurringBillingAutomatic`. Both are `false` in this phase: no payment-provider sandbox and no worker process. Do not assume automatic collection.
+- Display server preview/result only. Paid invoice lines are immutable; changes create adjustments, never rewrite issued lines.
 | `GET /deal-health` | Alerts with reason/confidence/context. |
 | `POST /deal-health/alerts/:id/nudge` **idempotent** | Optional message; notification queued. |
 | `GET /reports/quotes`, `/reports/orders`, `/reports/sales` | JSON date/team/owner/status/product/category/currency filters. |

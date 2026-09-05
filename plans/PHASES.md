@@ -15,7 +15,7 @@ agents do not need to infer it.
 | [05](phase-05-approvals.md) | Planned | Risk evaluation, frozen policy approval workflow, internal audit/inbox | `Start Phase 05 from plans/phase-05-approvals.md` |
 | [06](phase-06-customer-portal.md) | Planned | Restricted portal share, comment, negotiation, acceptance | `Start Phase 06 from plans/phase-06-customer-portal.md` |
 | [07](phase-07-orders-and-inventory.md) | Planned | Order conversion, stock ledger/reservation, allocations and shipment | `Start Phase 07 from plans/phase-07-orders-and-inventory.md` |
-| [08](phase-08-subscriptions-and-billing.md) | Planned | Subscription changes, proration, invoices, payment boundary/jobs | `Start Phase 08 from plans/phase-08-subscriptions-and-billing.md` |
+| [08](phase-08-subscriptions-and-billing.md) | Complete | Subscription changes, proration, invoices, payment boundary/jobs | `Start Phase 08 from plans/phase-08-subscriptions-and-billing.md` |
 | [09](phase-09-health-reports-and-events.md) | Planned | Health alerts, reports/exports, notification worker, SSE | `Start Phase 09 from plans/phase-09-health-reports-and-events.md` |
 | [10](phase-10-release-hardening.md) | Planned | Security/performance/operations/release readiness | `Start Phase 10 from plans/phase-10-release-hardening.md` |
 
