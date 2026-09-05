@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { sql } from "drizzle-orm";
+import * as argon2 from "argon2";
 import * as schema from "./schema/index.js";
 
 if (process.env.NODE_ENV !== "production") dotenv.config();
@@ -24,8 +24,11 @@ const CUSTOMERS = [
   { tenantSlug: "globex", name: "Globex Customer One" },
 ] as const;
 
-// Deterministic fake hash — never copy prototype real secrets
-const FAKE_PASSWORD_HASH = "$argon2id$v=19$m=19456,t=2,p=1$fakeSeedOnly$fakeHashForDevDemoDoNotUseInProd";
+// Real argon2id hash for demo users — password is DemoPass123! (known for dev/testing, not production)
+const DEMO_PASSWORD = "DemoPass123!";
+async function demoPasswordHash() {
+  return argon2.hash(DEMO_PASSWORD, { type: argon2.argon2id });
+}
 
 async function seed() {
   const url = process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL;
@@ -49,13 +52,14 @@ async function seed() {
   const orgBySlug = new Map(orgs.map((o) => [o.slug, o]));
 
   console.log("[seed] upserting users...");
+  const demoHash = await demoPasswordHash();
   for (const u of USERS) {
     await db
       .insert(schema.users)
-      .values({ email: u.email, name: u.name, passwordHash: FAKE_PASSWORD_HASH })
+      .values({ email: u.email, name: u.name, passwordHash: demoHash })
       .onConflictDoUpdate({
         target: schema.users.email,
-        set: { name: u.name },
+        set: { name: u.name, passwordHash: demoHash },
       });
   }
   const users = await db.select().from(schema.users);

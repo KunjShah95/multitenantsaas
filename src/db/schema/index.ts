@@ -9,3 +9,4 @@ export * from "./customerContacts.js";
 export * from "./auditEvents.js";
 export * from "./outboxEvents.js";
 export * from "./idempotencyKeys.js";
+export * from "./portalMagicLinks.js";

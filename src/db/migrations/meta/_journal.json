@@ -22,6 +22,13 @@
       "when": 1788588568938,
       "tag": "0002_fix_rls_null_handling",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788588568939,
+      "tag": "0003_portal_magic_links",
+      "breakpoints": true
     }
   ]
 }
