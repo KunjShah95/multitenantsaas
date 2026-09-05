@@ -1,7 +1,22 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const source = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
-const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+const appDir = new URL("../app/", import.meta.url);
+
+function collectFiles(dirPath) {
+  const out = [];
+  for (const entry of readdirSync(dirPath, { withFileTypes: true })) {
+    const full = join(dirPath, entry.name);
+    if (entry.isDirectory()) out.push(...collectFiles(full));
+    else if (/\.(tsx?|css)$/.test(entry.name)) out.push(readFileSync(full, "utf8"));
+  }
+  return out;
+}
+
+const sources = collectFiles(fileURLToPath(appDir));
+const source = sources.join("\n");
+const css = sources.join("\n");
 
 const requiredRoutes = [
   "login",
@@ -69,4 +84,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Prototype audit passed: ${requiredRoutes.length} routes and ${requiredInteractions.length} critical interactions covered.`);
+console.log(`Prototype audit passed: ${requiredRoutes.length} routes and ${requiredInteractions.length} critical interactions covered across ${sources.length} app files.`);

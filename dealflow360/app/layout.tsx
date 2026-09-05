@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const sans = Geist({ subsets: ["latin"], display: "swap", variable: "--font-geist-sans" });
 const mono = Geist_Mono({ subsets: ["latin"], display: "swap", variable: "--font-geist-mono" });
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
