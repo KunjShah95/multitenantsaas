@@ -1,5 +1,4 @@
 import { Router } from "express";
-import rateLimit from "express-rate-limit";
 import { ApiError } from "../../shared/errors.js";
 import { authenticate } from "../../middleware/authenticate.js";
 import { requireMembershipRole } from "../../middleware/authorize.js";
@@ -15,30 +14,21 @@ import {
 import * as service from "./auth.service.js";
 import { requestPortalLink, exchangePortalLink } from "../../auth/portal.js";
 import { getPortalCookieOptions } from "../../auth/session.js";
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (_req, res) => {
-    res.status(429).json({ error: { code: "RATE_LIMITED", message: "Too many requests", requestId: (res as unknown as { req: { requestId: string } }).req.requestId } });
-  },
-});
-
-const portalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (_req, res) => {
-    res.status(429).json({ error: { code: "RATE_LIMITED", message: "Too many requests", requestId: (res as unknown as { req: { requestId: string } }).req.requestId } });
-  },
-});
+import { authRateLimiter as authLimiter, portalRateLimiter as portalLimiter } from "../../shared/rateLimiter.js";
 
 export const authRouter = Router();
 
-function setRefreshCookie(res: import("express").Response, token: string, opts: { httpOnly: boolean; secure: boolean; sameSite: "lax" | "strict" | "none"; path: string; maxAge: number }) {
+function setRefreshCookie(
+  res: import("express").Response,
+  token: string,
+  opts: {
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: "lax" | "strict" | "none";
+    path: string;
+    maxAge: number;
+  },
+) {
   res.cookie("refresh_token", token, {
     httpOnly: opts.httpOnly,
     secure: opts.secure,
@@ -56,10 +46,18 @@ function clearRefreshCookie(res: import("express").Response) {
 authRouter.post("/bootstrap", authLimiter, async (req, res, next) => {
   try {
     const parsed = bootstrapSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+    if (!parsed.success)
+      throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
     const result = await service.bootstrap(parsed.data);
     setRefreshCookie(res, result.refreshToken, result.refreshCookieOptions);
-    res.status(201).json({ data: { accessToken: result.accessToken, user: result.user, organization: result.organization, membership: result.membership } });
+    res.status(201).json({
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+        organization: result.organization,
+        membership: result.membership,
+      },
+    });
   } catch (e) {
     next(e);
   }
@@ -69,11 +67,19 @@ authRouter.post("/bootstrap", authLimiter, async (req, res, next) => {
 authRouter.post("/login", authLimiter, async (req, res, next) => {
   try {
     const parsed = loginSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+    if (!parsed.success)
+      throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
     const requestId = (req as unknown as { requestId: string }).requestId;
     const result = await service.login(parsed.data, requestId);
     setRefreshCookie(res, result.refreshToken, result.refreshCookieOptions);
-    res.json({ data: { accessToken: result.accessToken, user: result.user, organization: result.organization, membership: result.membership } });
+    res.json({
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+        organization: result.organization,
+        membership: result.membership,
+      },
+    });
   } catch (e) {
     next(e);
   }
@@ -84,7 +90,10 @@ authRouter.post("/refresh", async (req, res, next) => {
   try {
     const token = req.cookies?.refresh_token as string | undefined;
     if (!token) throw new ApiError(401, "UNAUTHORIZED", "Missing refresh token");
-    const result = await service.refresh(token, (req as unknown as { requestId: string }).requestId);
+    const result = await service.refresh(
+      token,
+      (req as unknown as { requestId: string }).requestId,
+    );
     setRefreshCookie(res, result.refreshToken, result.refreshCookieOptions);
     res.json({ data: { accessToken: result.accessToken } });
   } catch (e) {
@@ -120,38 +129,67 @@ meRouter.get("/", authenticate, async (req, res, next) => {
 authRouter.post("/switch-organization", authenticate, async (req, res, next) => {
   try {
     const parsed = switchOrgSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+    if (!parsed.success)
+      throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
     const auth = req.auth!;
-    const result = await service.switchOrganization(auth.userId, auth.tenantId, parsed.data.organizationId);
+    const result = await service.switchOrganization(
+      auth.userId,
+      auth.tenantId,
+      parsed.data.organizationId,
+    );
     setRefreshCookie(res, result.refreshToken, result.refreshCookieOptions);
-    res.json({ data: { accessToken: result.accessToken, organization: result.organization, membership: result.membership } });
+    res.json({
+      data: {
+        accessToken: result.accessToken,
+        organization: result.organization,
+        membership: result.membership,
+      },
+    });
   } catch (e) {
     next(e);
   }
 });
 
 // POST /api/v1/auth/invitations (admin only)
-authRouter.post("/invitations", authenticate, requireMembershipRole("admin"), async (req, res, next) => {
-  try {
-    const parsed = invitationCreateSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
-    const auth = req.auth!;
-    const requestId = (req as unknown as { requestId: string }).requestId;
-    const inv = await service.createInvitation({ userId: auth.userId, tenantId: auth.tenantId, role: auth.role }, parsed.data, requestId);
-    res.status(201).json({ data: inv });
-  } catch (e) {
-    next(e);
-  }
-});
+authRouter.post(
+  "/invitations",
+  authenticate,
+  requireMembershipRole("admin"),
+  async (req, res, next) => {
+    try {
+      const parsed = invitationCreateSchema.safeParse(req.body);
+      if (!parsed.success)
+        throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+      const auth = req.auth!;
+      const requestId = (req as unknown as { requestId: string }).requestId;
+      const inv = await service.createInvitation(
+        { userId: auth.userId, tenantId: auth.tenantId, role: auth.role },
+        parsed.data,
+        requestId,
+      );
+      res.status(201).json({ data: inv });
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 // POST /api/v1/auth/invitations/accept (public)
 authRouter.post("/invitations/accept", authLimiter, async (req, res, next) => {
   try {
     const parsed = invitationAcceptSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+    if (!parsed.success)
+      throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
     const result = await service.acceptInvitation(parsed.data);
     setRefreshCookie(res, result.refreshToken, result.refreshCookieOptions);
-    res.status(201).json({ data: { accessToken: result.accessToken, user: result.user, organization: result.organization, membership: result.membership } });
+    res.status(201).json({
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+        organization: result.organization,
+        membership: result.membership,
+      },
+    });
   } catch (e) {
     next(e);
   }
@@ -164,7 +202,8 @@ export const portalRouter = Router();
 portalRouter.post("/request-link", portalLimiter, async (req, res, next) => {
   try {
     const parsed = portalRequestLinkSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+    if (!parsed.success)
+      throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
     await requestPortalLink(parsed.data.email);
     // Neutral 202 regardless of existence
     res.status(202).json({ data: { message: "If an account exists, a link has been sent" } });
@@ -177,7 +216,8 @@ portalRouter.post("/request-link", portalLimiter, async (req, res, next) => {
 portalRouter.post("/exchange-link", portalLimiter, async (req, res, next) => {
   try {
     const parsed = portalExchangeSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+    if (!parsed.success)
+      throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
     const result = await exchangePortalLink(parsed.data.token);
     const cookieOpts = getPortalCookieOptions();
     res.cookie("portal_token", result.portalToken, {
@@ -199,7 +239,8 @@ portalRouter.post("/login", portalLimiter, async (req, res, next) => {
     // Validate shape but always return 401 without revealing existence
     const { portalLoginSchema } = await import("./auth.schemas.js");
     const parsed = portalLoginSchema.safeParse(req.body);
-    if (!parsed.success) throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
+    if (!parsed.success)
+      throw new ApiError(400, "BAD_REQUEST", "Invalid input", parsed.error.flatten());
     throw new ApiError(401, "UNAUTHORIZED", "Invalid credentials — use magic link");
   } catch (e) {
     next(e);

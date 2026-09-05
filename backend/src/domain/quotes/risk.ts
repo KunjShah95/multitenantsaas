@@ -86,7 +86,10 @@ function resolveAllowedPure(
   return Math.min(...ceilings).toFixed(2);
 }
 
-function resolveTierCeilingPure(customerTierCode: string | null | undefined, discountPolicy: DiscountPolicySnapshot | null | undefined): number | null {
+function resolveTierCeilingPure(
+  customerTierCode: string | null | undefined,
+  discountPolicy: DiscountPolicySnapshot | null | undefined,
+): number | null {
   if (!discountPolicy || !customerTierCode) return null;
   const found = discountPolicy.tierLimits.find((t) => t.tierCode === customerTierCode);
   return found ? toNumberPct(found.ceilingPct) : null;
@@ -113,7 +116,11 @@ export function evaluateRisk(input: RiskInput): RiskEvaluation {
   for (const l of input.lines) grossTotal += Number(l.subtotal);
 
   for (const l of input.lines) {
-    const allowed = resolveAllowedPure(input.customerTierCode ?? null, l.categoryCode ?? null, discountPolicy);
+    const allowed = resolveAllowedPure(
+      input.customerTierCode ?? null,
+      l.categoryCode ?? null,
+      discountPolicy,
+    );
     const over = Math.max(0, toNumberPct(l.discountPct) - toNumberPct(allowed));
     if (over > maxOverage) maxOverage = over;
     lineDetails.push({
@@ -193,12 +200,22 @@ export function evaluateRisk(input: RiskInput): RiskEvaluation {
   } else {
     // finance => need manager then finance
     if (input.approvalPolicy?.steps?.length) {
-      requiredSteps = [...input.approvalPolicy.steps].sort((a, b) => a.sequence - b.sequence).map((s, idx) => ({ sequence: idx + 1, role: s.role }));
+      requiredSteps = [...input.approvalPolicy.steps]
+        .sort((a, b) => a.sequence - b.sequence)
+        .map((s, idx) => ({ sequence: idx + 1, role: s.role }));
       // if policy has only one step but finance required, keep as is; exhaustive list
       if (requiredSteps.length === 1) {
         // ensure at least manager->finance if policy incomplete
-        if (requiredSteps[0]!.role !== "manager") requiredSteps = [{ sequence: 1, role: "manager" }, { sequence: 2, role: "finance" }];
-        else requiredSteps = [{ sequence: 1, role: "manager" }, { sequence: 2, role: "finance" }];
+        if (requiredSteps[0]!.role !== "manager")
+          requiredSteps = [
+            { sequence: 1, role: "manager" },
+            { sequence: 2, role: "finance" },
+          ];
+        else
+          requiredSteps = [
+            { sequence: 1, role: "manager" },
+            { sequence: 2, role: "finance" },
+          ];
       }
     } else {
       requiredSteps = [
@@ -240,7 +257,12 @@ export async function resolveAllowedDiscount(
   const policies = await tx
     .select()
     .from(schema.discountPolicies)
-    .where(and(eq(schema.discountPolicies.tenantId, tenantId), eq(schema.discountPolicies.status, "published")));
+    .where(
+      and(
+        eq(schema.discountPolicies.tenantId, tenantId),
+        eq(schema.discountPolicies.status, "published"),
+      ),
+    );
 
   // Filter effective window
   const effective = policies.filter((p) => {
@@ -253,8 +275,12 @@ export async function resolveAllowedDiscount(
 
   // Sort by most recent publishedAt then createdAt
   effective.sort((a, b) => {
-    const aTime = a.publishedAt ? new Date(a.publishedAt).getTime() : new Date(a.createdAt).getTime();
-    const bTime = b.publishedAt ? new Date(b.publishedAt).getTime() : new Date(b.createdAt).getTime();
+    const aTime = a.publishedAt
+      ? new Date(a.publishedAt).getTime()
+      : new Date(a.createdAt).getTime();
+    const bTime = b.publishedAt
+      ? new Date(b.publishedAt).getTime()
+      : new Date(b.createdAt).getTime();
     return bTime - aTime;
   });
 
@@ -305,7 +331,12 @@ export async function computeRiskPreview(
 
   const allowedList: string[] = [];
   for (const l of lines) {
-    const allowed = await resolveAllowedDiscount(tx, tenantId, customerTierCode ?? null, l.productCategoryCode);
+    const allowed = await resolveAllowedDiscount(
+      tx,
+      tenantId,
+      customerTierCode ?? null,
+      l.productCategoryCode,
+    );
     allowedList.push(allowed);
     const over = Math.max(0, Number(l.discountPct) - Number(allowed));
     details.push({ discountPct: l.discountPct, allowedPct: allowed, overage: over.toFixed(2) });

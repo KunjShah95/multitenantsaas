@@ -174,7 +174,14 @@ export function calcLine(input: LineCalcInput): LineCalcResult {
 }
 
 export type TotalsInput = {
-  lines: Array<{ net: string; tax: string; total: string; discountAmount: string; subtotal: string; margin: string }>;
+  lines: Array<{
+    net: string;
+    tax: string;
+    total: string;
+    discountAmount: string;
+    subtotal: string;
+    margin: string;
+  }>;
 };
 
 export type TotalsResult = {
@@ -234,7 +241,11 @@ export function calcRiskPreview(
   lines: Array<{ discountPct: string; subtotal: string; allowedPct: string }>,
   orderDiscountPct?: string,
   orderAllowedPct?: string,
-): { riskScore: string; riskLevel: string; lineOverages: Array<{ discountPct: string; allowedPct: string; overage: string }> } {
+): {
+  riskScore: string;
+  riskLevel: string;
+  lineOverages: Array<{ discountPct: string; allowedPct: string; overage: string }>;
+} {
   const lineOverages = lines.map((l) => {
     const disc = Number(l.discountPct);
     const allowed = Number(l.allowedPct);

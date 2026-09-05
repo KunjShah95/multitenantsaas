@@ -1,4 +1,15 @@
-import { pgTable, uuid, text, timestamp, integer, varchar, boolean, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  integer,
+  varchar,
+  boolean,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 
@@ -26,7 +37,10 @@ export const approvalPolicies = pgTable(
     uniqueIndex("approval_policies_tenant_code_version_unique").on(t.tenantId, t.code, t.version),
     check("approval_policies_status_check", sql`${t.status} IN ('draft','published','archived')`),
     check("approval_policies_version_check", sql`${t.version} >= 1`),
-    check("approval_policies_effective_check", sql`${t.effectiveTo} IS NULL OR ${t.effectiveFrom} IS NULL OR ${t.effectiveTo} > ${t.effectiveFrom}`),
+    check(
+      "approval_policies_effective_check",
+      sql`${t.effectiveTo} IS NULL OR ${t.effectiveFrom} IS NULL OR ${t.effectiveTo} > ${t.effectiveFrom}`,
+    ),
   ],
 );
 
@@ -51,6 +65,9 @@ export const approvalPolicySteps = pgTable(
     index("approval_policy_steps_tenant_idx").on(t.tenantId),
     index("approval_policy_steps_policy_idx").on(t.policyId),
     check("approval_policy_steps_sequence_check", sql`${t.sequence} >= 1`),
-    check("approval_policy_steps_role_check", sql`${t.role} IN ('manager','finance','admin','ops')`),
+    check(
+      "approval_policy_steps_role_check",
+      sql`${t.role} IN ('manager','finance','admin','ops')`,
+    ),
   ],
 );

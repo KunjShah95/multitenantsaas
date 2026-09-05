@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, integer, varchar, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  integer,
+  varchar,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 
@@ -26,7 +36,10 @@ export const discountPolicies = pgTable(
     uniqueIndex("discount_policies_tenant_code_version_unique").on(t.tenantId, t.code, t.version),
     check("discount_policies_status_check", sql`${t.status} IN ('draft','published','archived')`),
     check("discount_policies_version_check", sql`${t.version} >= 1`),
-    check("discount_policies_effective_check", sql`${t.effectiveTo} IS NULL OR ${t.effectiveFrom} IS NULL OR ${t.effectiveTo} > ${t.effectiveFrom}`),
+    check(
+      "discount_policies_effective_check",
+      sql`${t.effectiveTo} IS NULL OR ${t.effectiveFrom} IS NULL OR ${t.effectiveTo} > ${t.effectiveFrom}`,
+    ),
   ],
 );
 

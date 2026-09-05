@@ -1,6 +1,7 @@
 # Phase 08 — Subscriptions, proration, invoices, payments, and billing jobs
 
-**Status:** Planned  
+**Status:** Complete  
+
 **Depends on:** Phase 07 complete  
 **Owner gate:** Decide whether this phase remains manual/demo payment only or select payment provider sandbox/webhook
 

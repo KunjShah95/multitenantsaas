@@ -17,7 +17,11 @@ export const switchOrgSchema = z
 export const bootstrapSchema = z
   .object({
     organizationName: z.string().min(1).max(100),
-    slug: z.string().min(2).max(64).regex(/^[a-z0-9-]+$/),
+    slug: z
+      .string()
+      .min(2)
+      .max(64)
+      .regex(/^[a-z0-9-]+$/),
     adminName: z.string().min(1).max(100),
     adminEmail: z.string().email().max(255),
     password: z.string().min(8).max(128),

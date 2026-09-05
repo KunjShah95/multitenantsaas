@@ -35,7 +35,10 @@ export async function getRecommendations(
   // Fetch all upsell rules for tenant where trigger in cart
   if (cartProductIds.length === 0) return [];
 
-  const allRules = await tx.select().from(schema.upsellRules).where(eq(schema.upsellRules.tenantId, tenantId));
+  const allRules = await tx
+    .select()
+    .from(schema.upsellRules)
+    .where(eq(schema.upsellRules.tenantId, tenantId));
   const cartSetForTrigger = new Set(cartProductIds);
   const rules = allRules.filter((r) => cartSetForTrigger.has(r.triggerProductId));
 
@@ -54,7 +57,12 @@ export async function getRecommendations(
     const prodRows = await tx
       .select()
       .from(schema.products)
-      .where(and(eq(schema.products.id, rule.suggestedProductId), eq(schema.products.tenantId, tenantId)))
+      .where(
+        and(
+          eq(schema.products.id, rule.suggestedProductId),
+          eq(schema.products.tenantId, tenantId),
+        ),
+      )
       .limit(1);
     const product = prodRows[0];
     if (!product || product.archivedAt) continue;

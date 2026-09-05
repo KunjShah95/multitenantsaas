@@ -12,7 +12,10 @@ function getRuntimeUrl(): string {
   const pwd = process.env.TEST_RUNTIME_PASSWORD;
   if (pwd) {
     const base = process.env.DATABASE_URL!;
-    return base.replace(/postgresql:\/\/[^@]+@/, `postgresql://app_runtime:${encodeURIComponent(pwd)}@`);
+    return base.replace(
+      /postgresql:\/\/[^@]+@/,
+      `postgresql://app_runtime:${encodeURIComponent(pwd)}@`,
+    );
   }
   throw new Error(
     "RUNTIME_DATABASE_URL or TEST_RUNTIME_PASSWORD not set — create app_runtime role via src/db/roles.sql and set RUNTIME_DATABASE_URL (or TEST_RUNTIME_PASSWORD) in untracked .env for RLS integration tests",
@@ -22,7 +25,12 @@ function getRuntimeUrl(): string {
 export function getRuntimeDb() {
   if (runtimeDb) return runtimeDb as unknown as ReturnType<typeof drizzle>;
   const url = getRuntimeUrl();
-  runtimePool = new Pool({ connectionString: url, max: 5, idleTimeoutMillis: 10000, connectionTimeoutMillis: 5000 });
+  runtimePool = new Pool({
+    connectionString: url,
+    max: 5,
+    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 5000,
+  });
   runtimePool.on("error", (e) => console.error("[runtimePool] error", e));
   runtimeDb = drizzle(runtimePool, { schema });
   return runtimeDb as unknown as ReturnType<typeof drizzle>;
@@ -54,7 +62,8 @@ export async function withRuntimeTenantTransaction<T>(
     const t = tx as { execute: (q: unknown) => Promise<unknown> };
     await t.execute(sql.raw(`SET LOCAL app.tenant_id = '${context.tenantId}'`));
     if (context.actorId) await t.execute(sql.raw(`SET LOCAL app.actor_id = '${context.actorId}'`));
-    if (context.requestId) await t.execute(sql.raw(`SET LOCAL app.request_id = '${context.requestId}'`));
+    if (context.requestId)
+      await t.execute(sql.raw(`SET LOCAL app.request_id = '${context.requestId}'`));
     return fn(tx as ReturnType<typeof drizzle>);
   });
 }

@@ -10,6 +10,7 @@
     "start": "tsx src/index.ts",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
+    "build:openapi": "tsx src/openapi/export.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -25,6 +26,7 @@
     "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^9.1.0",
     "argon2": "^0.45.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",

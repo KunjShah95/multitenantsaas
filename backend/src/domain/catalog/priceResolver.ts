@@ -66,8 +66,10 @@ export async function resolvePrice(input: PriceResolveInput): Promise<PriceResol
   // Sort by precedence: tier match first, then priority desc, then effectiveFrom desc
   const tierId = input.customerTierId ?? null;
   lists.sort((a, b) => {
-    const aTierMatch = tierId && a.customerTierId === tierId ? 1 : a.customerTierId === null ? 0 : -1;
-    const bTierMatch = tierId && b.customerTierId === tierId ? 1 : b.customerTierId === null ? 0 : -1;
+    const aTierMatch =
+      tierId && a.customerTierId === tierId ? 1 : a.customerTierId === null ? 0 : -1;
+    const bTierMatch =
+      tierId && b.customerTierId === tierId ? 1 : b.customerTierId === null ? 0 : -1;
     if (aTierMatch !== bTierMatch) return bTierMatch - aTierMatch;
     if (a.priority !== b.priority) return b.priority - a.priority;
     const aFrom = a.effectiveFrom ? new Date(a.effectiveFrom).getTime() : 0;
@@ -138,7 +140,8 @@ export async function resolvePrice(input: PriceResolveInput): Promise<PriceResol
  * Validate decimal price string has at most 6 fractional digits and non-negative.
  */
 export function validatePriceString(price: string): string | null {
-  if (!/^\d+(\.\d{1,6})?$/.test(price)) return "Price must be decimal with up to 6 fractional digits";
+  if (!/^\d+(\.\d{1,6})?$/.test(price))
+    return "Price must be decimal with up to 6 fractional digits";
   const num = Number(price);
   if (Number.isNaN(num) || num < 0) return "Price must be non-negative";
   return null;

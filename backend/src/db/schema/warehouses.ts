@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 
@@ -12,7 +22,9 @@ export const warehouses = pgTable(
     code: varchar("code", { length: 64 }).notNull(),
     name: text("name").notNull(),
     location: text("location"),
-    shippingCostWeight: numeric("shipping_cost_weight", { precision: 10, scale: 4 }).notNull().default("1"),
+    shippingCostWeight: numeric("shipping_cost_weight", { precision: 10, scale: 4 })
+      .notNull()
+      .default("1"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
     archivedAt: timestamp("archived_at", { withTimezone: true }),

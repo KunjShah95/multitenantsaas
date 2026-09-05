@@ -115,7 +115,7 @@ export function parseEnv(overrides: Record<string, string | undefined> = process
     if (!result.data.SESSION_PEPPER)
       missing.push("SESSION_PEPPER — will use insecure dev fallback until Phase 2");
     if (missing.length > 0) {
-      // eslint-disable-next-line no-console
+       
       console.warn(`[env] missing optional (Phase 0 tolerates):\n  - ${missing.join("\n  - ")}`);
     }
   }

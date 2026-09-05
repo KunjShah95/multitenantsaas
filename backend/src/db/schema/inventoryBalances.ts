@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, numeric, integer, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  numeric,
+  integer,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { warehouses } from "./warehouses.js";
@@ -23,7 +33,11 @@ export const inventoryBalances = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    uniqueIndex("inventory_balances_tenant_warehouse_sku_unique").on(t.tenantId, t.warehouseId, t.sku),
+    uniqueIndex("inventory_balances_tenant_warehouse_sku_unique").on(
+      t.tenantId,
+      t.warehouseId,
+      t.sku,
+    ),
     index("inventory_balances_tenant_idx").on(t.tenantId),
     index("inventory_balances_warehouse_idx").on(t.warehouseId),
     check("inventory_balances_sku_check", sql`char_length(${t.sku}) > 0`),

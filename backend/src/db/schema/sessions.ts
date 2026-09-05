@@ -18,8 +18,5 @@ export const sessions = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [
-    index("sessions_tenant_idx").on(t.tenantId),
-    index("sessions_user_idx").on(t.userId),
-  ],
+  (t) => [index("sessions_tenant_idx").on(t.tenantId), index("sessions_user_idx").on(t.userId)],
 );

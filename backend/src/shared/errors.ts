@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import { logger } from "./logger.js";
 
 export type ErrorCode =
   | "BAD_REQUEST"
@@ -62,8 +63,7 @@ export function errorMiddleware(err: unknown, req: Request, res: Response, _next
     return;
   }
 
-  // Unexpected — log with requestId, never leak internals
-  // eslint-disable-next-line no-console
-  console.error(`[${requestId}] unexpected error`, err);
+  // Unexpected — log with requestId via structured logger (never leaks internals to client)
+  logger.error({ requestId, err }, "Unexpected error");
   res.status(500).json(errorEnvelope("INTERNAL_ERROR", "Internal server error", requestId));
 }

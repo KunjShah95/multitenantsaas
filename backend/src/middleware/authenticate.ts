@@ -73,10 +73,16 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
   }
 }
 
-// Optional authenticate for portal (cookie-based)
+// Optional authenticate for portal (cookie-based, also accepts Authorization Bearer for tests)
 export async function authenticatePortal(req: Request, _res: Response, next: NextFunction) {
   try {
-    const token = (req as unknown as { cookies?: Record<string, string> }).cookies?.portal_token;
+    const cookieToken = (req as unknown as { cookies?: Record<string, string> }).cookies
+      ?.portal_token;
+    const header = req.headers.authorization;
+    const bearer = header?.startsWith("Bearer ") ? header.slice(7).trim() : undefined;
+    // also allow x-portal-token header for test convenience
+    const headerPortal = req.headers["x-portal-token"] as string | undefined;
+    const token = cookieToken ?? bearer ?? headerPortal;
     if (!token) throw new ApiError(401, "UNAUTHORIZED", "Missing portal session");
     const { verifyPortalToken } = await import("../auth/portal.js");
     const ctx = await verifyPortalToken(token);

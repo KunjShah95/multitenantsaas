@@ -24,7 +24,11 @@ export const priceListItems = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    uniqueIndex("price_list_items_list_product_variant_unique").on(t.priceListId, t.productId, t.variantId),
+    uniqueIndex("price_list_items_list_product_variant_unique").on(
+      t.priceListId,
+      t.productId,
+      t.variantId,
+    ),
     index("price_list_items_tenant_idx").on(t.tenantId),
     index("price_list_items_list_idx").on(t.priceListId),
     check("price_list_items_price_check", sql`${t.price} >= 0`),

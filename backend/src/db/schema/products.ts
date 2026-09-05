@@ -1,4 +1,15 @@
-import { pgTable, uuid, text, timestamp, varchar, numeric, integer, index, uniqueIndex, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  varchar,
+  numeric,
+  integer,
+  index,
+  uniqueIndex,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { organizations } from "./organizations.js";
 import { productCategories } from "./productCategories.js";
@@ -10,7 +21,9 @@ export const products = pgTable(
     tenantId: uuid("tenant_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    categoryId: uuid("category_id").references(() => productCategories.id, { onDelete: "set null" }),
+    categoryId: uuid("category_id").references(() => productCategories.id, {
+      onDelete: "set null",
+    }),
     sku: varchar("sku", { length: 64 }).notNull(),
     name: text("name").notNull(),
     unit: varchar("unit", { length: 32 }).notNull().default("ea"),
