@@ -26,3 +26,6 @@ export * from "./quotes.js";
 export * from "./quoteLines.js";
 export * from "./quoteVersions.js";
 export * from "./quoteApprovals.js";
+export * from "./quoteShares.js";
+export * from "./quoteComments.js";
+export * from "./negotiationRequests.js";

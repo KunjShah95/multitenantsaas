@@ -64,6 +64,20 @@
       "when": 1788597399346,
       "tag": "0008_rare_cannonball",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788599872741,
+      "tag": "0009_overrated_queen_noir",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788600508673,
+      "tag": "0010_disable_portal_rls",
+      "breakpoints": true
     }
   ]
 }

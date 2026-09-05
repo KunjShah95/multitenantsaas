@@ -13,6 +13,8 @@ import { configRouter } from "./api/v1/config.routes.js";
 import { governanceRouter } from "./api/v1/governance.routes.js";
 import { quotesRouter } from "./api/v1/quotes.routes.js";
 import { approvalsRouter } from "./api/v1/approvals.routes.js";
+import sharesRouter from "./api/v1/shares.routes.js";
+import portalQuotesRouter from "./api/v1/portal.routes.js";
 
 export function createApp() {
   const env = getEnv();
@@ -61,14 +63,18 @@ export function createApp() {
   app.use("/api/v1/portal/auth", portalRouter);
   app.use("/api/v1/me", meRouter);
 
+  // v1 API — Phase 06 portal (must be before generic /api/v1 handlers that would intercept portal paths)
+  app.use("/api/v1/portal", portalQuotesRouter);
+
   // v1 API — Phase 03 catalog/governance (tenant-scoped configuration)
   app.use("/api/v1", configRouter);
   app.use("/api/v1", governanceRouter);
-
   // v1 API — Phase 04 quotes (tenant-scoped, revision-protected)
   app.use("/api/v1", quotesRouter);
   // v1 API — Phase 05 approvals (risk/submit/decisions/inbox/audit)
   app.use("/api/v1", approvalsRouter);
+  // v1 API — Phase 06 shares/negotiation resolve (internal)
+  app.use("/api/v1", sharesRouter);
 
   // 404 for unknown routes — single error envelope
   app.use(notFoundHandler);
