@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const sans = Geist({ subsets: ["latin"], display: "swap" });
-const mono = Geist_Mono({ subsets: ["latin"], display: "swap", variable: "--font-mono" });
+const sans = Geist({ subsets: ["latin"], display: "swap", variable: "--font-geist-sans" });
+const mono = Geist_Mono({ subsets: ["latin"], display: "swap", variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
   title: "DealFlow 360 | Enterprise Sales & Revenue Operations",
@@ -14,11 +14,11 @@ const themeInit = `(function(){try{var t=localStorage.getItem("df360-theme")||"s
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={sans.className} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
-      <body className={mono.variable}>
+      <body>
         <a className="skip-link" href="#main">Skip to content</a>
         {children}
       </body>
