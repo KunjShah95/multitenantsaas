@@ -15,6 +15,7 @@ import { quotesRouter } from "./api/v1/quotes.routes.js";
 import { approvalsRouter } from "./api/v1/approvals.routes.js";
 import sharesRouter from "./api/v1/shares.routes.js";
 import portalQuotesRouter from "./api/v1/portal.routes.js";
+import { ordersRouter } from "./api/v1/orders.routes.js";
 
 export function createApp() {
   const env = getEnv();
@@ -75,6 +76,8 @@ export function createApp() {
   app.use("/api/v1", approvalsRouter);
   // v1 API — Phase 06 shares/negotiation resolve (internal)
   app.use("/api/v1", sharesRouter);
+  // v1 API — Phase 07 orders, fulfillment & shipments
+  app.use("/api/v1", ordersRouter);
 
   // 404 for unknown routes — single error envelope
   app.use(notFoundHandler);

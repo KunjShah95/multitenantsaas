@@ -9,6 +9,7 @@ import { findIdempotency, storeIdempotency } from "../../shared/idempotency.js";
 import { paginationQuerySchema, encodeCursor, decodeCursor } from "../../shared/pagination.js";
 import * as schema from "../../db/schema/index.js";
 import rateLimit from "express-rate-limit";
+import { OrdersService } from "../../domain/orders/orders.service.js";
 
 export const portalQuotesRouter = Router();
 
@@ -519,4 +520,68 @@ portalQuotesRouter.post("/quotes/:id/accept", async (req, res, next) => {
   }
 });
 
+// GET /portal/orders — customer-safe order list
+portalQuotesRouter.get("/orders", async (req, res, next) => {
+  try {
+    const ctx = req.portalAuth!;
+    const { tenantId, contactId } = ctx;
+
+    const rows = await withTenantTransaction({ tenantId }, async (tx) => {
+      const [contact] = await tx
+        .select()
+        .from(schema.customerContacts)
+        .where(and(eq(schema.customerContacts.tenantId, tenantId), eq(schema.customerContacts.id, contactId)))
+        .limit(1);
+
+      if (!contact) throw new ApiError(401, "UNAUTHORIZED", "Contact not found");
+
+      const orders = await OrdersService.listOrders(tx, {
+        tenantId,
+        customerId: contact.customerId,
+        limit: 50,
+      });
+      return orders.map((o) => ({
+        id: o.id,
+        number: o.number,
+        status: o.status,
+        currency: o.currency,
+        grandTotal: o.grandTotal,
+        createdAt: o.createdAt,
+        updatedAt: o.updatedAt,
+      }));
+    });
+
+    return res.json({ data: rows });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// GET /portal/orders/:id — customer-safe order detail
+portalQuotesRouter.get("/orders/:id", async (req, res, next) => {
+  try {
+    const ctx = req.portalAuth!;
+    const { tenantId, contactId } = ctx;
+    const orderId = req.params.id;
+
+    const order = await withTenantTransaction({ tenantId }, async (tx) => {
+      const [contact] = await tx
+        .select()
+        .from(schema.customerContacts)
+        .where(and(eq(schema.customerContacts.tenantId, tenantId), eq(schema.customerContacts.id, contactId)))
+        .limit(1);
+
+      if (!contact) throw new ApiError(401, "UNAUTHORIZED", "Contact not found");
+
+      return OrdersService.getPortalOrderById(tx, tenantId, contact.customerId, orderId);
+    });
+
+    return res.json({ data: order });
+  } catch (e) {
+    next(e);
+  }
+});
+
+
 export default portalQuotesRouter;
+
